@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_integrador_6/provider/add_lista.dart';
-import 'package:projeto_integrador_6/view/lista.dart';
+import 'package:meu_novo_aumigo/provider/add_lista.dart';
+import 'package:meu_novo_aumigo/view/lista.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
-  
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(

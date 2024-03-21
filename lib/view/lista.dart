@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_integrador_6/componente/modelTile.dart';
-import 'package:projeto_integrador_6/main.dart';
-import 'package:projeto_integrador_6/provider/add_lista.dart';
+import 'package:meu_novo_aumigo/componente/modelTile.dart';
+import 'package:meu_novo_aumigo/main.dart';
+import 'package:meu_novo_aumigo/provider/add_lista.dart';
 import 'package:provider/provider.dart';
 
 import 'cad_dog.dart';
@@ -31,12 +31,12 @@ class lista extends StatelessWidget {
             icon: Icon(Icons.add),
             onPressed: () {
               Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => cad_dog(),
-              ),
-            );
-            /*
+                context,
+                MaterialPageRoute(
+                  builder: (context) => cad_dog(),
+                ),
+              );
+              /*
               addLista.put(
                 model(
                   nome: 'teste',

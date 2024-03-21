@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_integrador_6/modelos/model.dart';
-import 'package:projeto_integrador_6/provider/add_lista.dart';
+import 'package:meu_novo_aumigo/modelos/model.dart';
+import 'package:meu_novo_aumigo/provider/add_lista.dart';
 import 'package:provider/provider.dart';
 
 // ignore: camel_case_types

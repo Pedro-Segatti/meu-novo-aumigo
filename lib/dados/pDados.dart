@@ -1,4 +1,4 @@
-import 'package:projeto_integrador_6/modelos/model.dart';
+import 'package:meu_novo_aumigo/modelos/model.dart';
 
 const pDados = {
   '1': const model(
@@ -8,7 +8,6 @@ const pDados = {
     descricao: "Dócil - Amigável - Temperamental - Impaciente",
     idade: "10 anos",
   ),
-
   '2': const model(
     id: '2',
     nome: "Ruffus",
@@ -16,7 +15,6 @@ const pDados = {
     descricao: "Dócil - Companheiro - Brincalhão",
     idade: "3 anos",
   ),
-
   '3': const model(
     id: '3',
     nome: "Putin",
@@ -24,6 +22,4 @@ const pDados = {
     descricao: "Dócil - Brincalhão - Compaheiro - Bem Humorado",
     idade: "6 meses",
   ),
-
-
 };

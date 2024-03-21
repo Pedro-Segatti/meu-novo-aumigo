@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_integrador_6/modelos/model.dart';
-import 'package:projeto_integrador_6/view/perfil.dart';
+import 'package:meu_novo_aumigo/modelos/model.dart';
+import 'package:meu_novo_aumigo/view/perfil.dart';
 
 // ignore: camel_case_types
 class modelTile extends StatelessWidget {
@@ -39,14 +39,14 @@ class modelTile extends StatelessWidget {
                     color: Colors.grey,
                     onPressed: () {
                       Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => perfil(Model.nome, Model.idade,Model.descricao, Model.avatar),
-                ),
-              );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => perfil(Model.nome, Model.idade,
+                              Model.descricao, Model.avatar),
+                        ),
+                      );
                     },
                   )
-                  
                 ],
               ),
             ),
