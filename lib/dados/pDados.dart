@@ -1,4 +1,4 @@
-import 'package:meu_novo_aumigo/modelos/model.dart';
+import 'package:meu_novo_aumigo/models/model.dart';
 
 const pDados = {
   '1': const model(

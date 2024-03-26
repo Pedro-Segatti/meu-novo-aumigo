@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:meu_novo_aumigo/dados/pDados.dart';
-import 'package:meu_novo_aumigo/modelos/model.dart';
+import 'package:meu_novo_aumigo/models/model.dart';
 
 class add_lista with ChangeNotifier {
   final Map<String, model> _item = {...pDados};

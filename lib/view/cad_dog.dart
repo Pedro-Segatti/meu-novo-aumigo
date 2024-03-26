@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meu_novo_aumigo/modelos/model.dart';
+import 'package:meu_novo_aumigo/models/model.dart';
 import 'package:meu_novo_aumigo/provider/add_lista.dart';
 import 'package:provider/provider.dart';
 

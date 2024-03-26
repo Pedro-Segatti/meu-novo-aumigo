@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meu_novo_aumigo/modelos/model.dart';
+import 'package:meu_novo_aumigo/models/model.dart';
 import 'package:meu_novo_aumigo/view/perfil.dart';
 
 // ignore: camel_case_types
