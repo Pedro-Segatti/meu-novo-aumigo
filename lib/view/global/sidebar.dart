@@ -42,8 +42,38 @@ class _SidebarState extends State<Sidebar> {
                   : SizedBox(),
             ),
           ),
+          Visibility(
+            visible: _auth.isLogged(), // Verifica se o usuário está logado
+            child: ListTile(
+              leading: Icon(Icons.pets),
+              title: Text("Nova Adoção"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
+            ),
+          ),
+          Visibility(
+            visible: _auth.isLogged(), // Verifica se o usuário está logado
+            child: ListTile(
+              leading: Icon(Icons.volunteer_activism),
+              title: Text("Nova Doação"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
+              },
+            ),
+          ),
           ListTile(
-            leading: Icon(Icons.logout),
+            leading: Icon(Icons.logout_outlined),
             title: !_auth.isLogged() ? Text('Entrar') : Text('Logout'),
             onTap: () {
               if (!_auth.isLogged()) {

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:meu_novo_aumigo/view/global/bottom_navigation.dart';
 import 'package:meu_novo_aumigo/view/global/feed_card.dart';
 import 'package:meu_novo_aumigo/view/global/sidebar.dart';
 import 'package:meu_novo_aumigo/view/global/topbar.dart';
-import 'package:meu_novo_aumigo/view/lista.dart';
-import 'package:meu_novo_aumigo/view/login/login_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -63,40 +62,7 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ]),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => lista(),
-                ),
-              );
-              break;
-            case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => LoginPage(),
-                ),
-              );
-              break;
-          }
-        },
-        unselectedItemColor: Colors.deepOrange,
-        selectedItemColor: Colors.deepOrange,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment_ind),
-            label: 'Adoção',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.feedback),
-            label: 'Quem Somos',
-          ),
-        ],
-      ),
+      bottomNavigationBar: BottomNavigation(),
     );
   }
 }
