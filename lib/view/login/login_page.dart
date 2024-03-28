@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:meu_novo_aumigo/view/home/home_page.dart';
+import 'package:meu_novo_aumigo/view/ong_form/form.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,36 +13,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
-  final name = TextEditingController();
   final email = TextEditingController();
   final senha = TextEditingController();
-
-  bool isLogin = true;
-  late String title;
-  late String actionButton;
-  late String toggleButton;
   bool loading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    setFormAction(true);
-  }
-
-  setFormAction(bool acao) {
-    setState(() {
-      isLogin = acao;
-      if (isLogin) {
-        title = 'Bem vindo';
-        actionButton = 'Login';
-        toggleButton = 'Ainda não tem conta? Cadastre-se agora.';
-      } else {
-        title = 'Crie sua conta';
-        actionButton = 'Cadastrar';
-        toggleButton = 'Voltar ao Login.';
-      }
-    });
-  }
 
   login() async {
     setState(() => loading = true);
@@ -53,19 +27,6 @@ class _LoginPageState extends State<LoginPage> {
         );
       });
       return Container(); //
-    } on AuthException catch (e) {
-      setState(() => loading = false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
-    }
-  }
-
-  registrar() async {
-    setState(() => loading = true);
-    try {
-      await context
-          .read<AuthService>()
-          .registrar(email.text, senha.text, name.text);
     } on AuthException catch (e) {
       setState(() => loading = false);
       ScaffoldMessenger.of(context)
@@ -85,32 +46,13 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  title,
+                  "Bem-vindo",
                   style: TextStyle(
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
                     letterSpacing: -1.5,
                   ),
                 ),
-                !isLogin
-                    ? Padding(
-                        padding: EdgeInsets.all(24),
-                        child: TextFormField(
-                          controller: name,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Nome',
-                          ),
-                          keyboardType: TextInputType.text,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Informe o nome corretamente!';
-                            }
-                            return null;
-                          },
-                        ),
-                      )
-                    : SizedBox(),
                 Padding(
                   padding: EdgeInsets.all(24),
                   child: TextFormField(
@@ -153,11 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        if (isLogin) {
-                          login();
-                        } else {
-                          registrar();
-                        }
+                        login();
                       }
                     },
                     child: Row(
@@ -180,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                               Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  actionButton,
+                                  "Entrar",
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
@@ -189,8 +127,13 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () => setFormAction(!isLogin),
-                  child: Text(toggleButton),
+                  onPressed: () =>
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => OngForm()),
+                    );
+                  }),
+                  child: Text("Cadastre-se"),
                 ),
               ],
             ),

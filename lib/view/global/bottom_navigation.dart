@@ -35,7 +35,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
         if (index == 0) {
           Scaffold.of(context).openDrawer();
-        } else if (index == 3 && !_auth.isLogged()) {
+        } else if (index == 2 && !_auth.isLogged()) {
           // Navegar para a página de login quando o índice do menu for 3 e o usuário não estiver logado
           Navigator.push(
             context,

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,6 @@ class AuthService extends ChangeNotifier {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: senha);
       await userCredential.user!.updateDisplayName(name);
-      _getUser();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw AuthException('A senha é muito fraca!');
@@ -47,6 +47,16 @@ class AuthService extends ChangeNotifier {
 
   login(String email, String senha) async {
     try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .where('approved', isEqualTo: true)
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        throw AuthException(
+            'O Seu cadastro está em revisão, não é possível acessar o aplicativo.');
+      }
       await _auth.signInWithEmailAndPassword(email: email, password: senha);
       _getUser();
     } on FirebaseAuthException catch (e) {
