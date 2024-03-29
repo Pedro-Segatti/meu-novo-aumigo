@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:meu_novo_aumigo/models/user_bd.dart';
 
 class AuthException implements Exception {
   String message;
@@ -10,6 +11,7 @@ class AuthException implements Exception {
 class AuthService extends ChangeNotifier {
   FirebaseAuth _auth = FirebaseAuth.instance;
   User? user;
+  UserBD? userBD;
   bool isLoading = true;
   bool isAnonymousAccess = true;
 
@@ -50,13 +52,14 @@ class AuthService extends ChangeNotifier {
       final snapshot = await FirebaseFirestore.instance
           .collection('users')
           .where('email', isEqualTo: email)
-          .where('approved', isEqualTo: true)
+          .where('status', isEqualTo: "A")
           .get();
 
       if (snapshot.docs.isEmpty) {
         throw AuthException(
             'O Seu cadastro está em revisão, não é possível acessar o aplicativo.');
       }
+      userBD = UserBD.fromFirestore(snapshot.docs[0]);
       await _auth.signInWithEmailAndPassword(email: email, password: senha);
       _getUser();
     } on FirebaseAuthException catch (e) {

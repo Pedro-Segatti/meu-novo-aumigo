@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
+import 'package:meu_novo_aumigo/view/approval/approval.dart';
 import 'package:meu_novo_aumigo/view/login/login_page.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,7 @@ class _SidebarState extends State<Sidebar> {
   Widget build(BuildContext context) {
     var _auth = context.read<AuthService>();
     var _user = _auth.user;
+    var _userBD = _auth.userBD;
 
     return Drawer(
       child: ListView(
@@ -72,18 +74,32 @@ class _SidebarState extends State<Sidebar> {
               },
             ),
           ),
+          Visibility(
+            visible: _auth.isLogged() && _userBD!.isRoleAdmin(),
+            child: ListTile(
+              leading: Icon(Icons.approval),
+              title: Text("Aprovação de Perfis"),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Approval(),
+                  ),
+                );
+              },
+            ),
+          ),
           ListTile(
             leading: Icon(Icons.logout_outlined),
-            title: !_auth.isLogged() ? Text('Entrar') : Text('Logout'),
+            title: !_auth.isLogged() ? Text('Entrar') : Text('Sair'),
             onTap: () {
               if (!_auth.isLogged()) {
-                Navigator.pushAndRemoveUntil(
+                _auth.logout();
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => LoginPage(),
                   ),
-                  (route) =>
-                      false, // Remove todas as rotas até a nova rota (LoginPage)
                 );
               } else {
                 context.read<AuthService>().logout();

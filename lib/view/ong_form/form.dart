@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:meu_novo_aumigo/models/user_bd.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:meu_novo_aumigo/view/home/home_page.dart';
 import 'package:meu_novo_aumigo/view/login/login_page.dart';
@@ -100,19 +101,21 @@ class _OngFormState extends State<OngForm> {
       CollectionReference users = firestore.collection('users');
 
       // Adicionando os dados
-      await users.add({
-        'name': _name.text,
-        'cnpj': getOnlyNumbers(_cnpj.text),
-        'cellphone': getOnlyNumbers(_cellphone.text),
-        'state': _selectedState,
-        'city': _selectedCity,
-        'neighborhood': _neighborhood.text,
-        'street': _street.text,
-        'houseNumber': _houseNumber.text,
-        'observation': _observation.text,
-        'email': _email.text,
-        'approved': false,
-      });
+      UserBD newUser = UserBD(
+        name: _name.text,
+        cnpj: getOnlyNumbers(_cnpj.text),
+        cellphone: getOnlyNumbers(_cellphone.text),
+        state: _selectedState,
+        city: _selectedCity,
+        neighborhood: _neighborhood.text,
+        street: _street.text,
+        houseNumber: _houseNumber.text,
+        observation: _observation.text,
+        email: _email.text,
+        status: "WA",
+        role: "institution",
+      );
+      await users.add(newUser.toJson());
 
       await context
           .read<AuthService>()
