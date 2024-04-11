@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 class Adoptions {
   final String animalType;
+  final String? behavior;
   final String? description;
   final String? name;
   final String sex;
@@ -16,6 +17,7 @@ class Adoptions {
 
   Adoptions({
     required this.animalType,
+    this.behavior,
     this.description,
     this.name,
     required this.sex,
@@ -34,6 +36,7 @@ class Adoptions {
     Map data = doc.data() as Map<String, dynamic>;
     return Adoptions(
       animalType: data['animalType'],
+      behavior: data['behavior'] ?? '',
       description: data['description'] ?? '',
       name: data['name'] ?? '',
       sex: data['sex'] ?? '',
@@ -52,6 +55,7 @@ class Adoptions {
   Map<String, dynamic> toJson() {
     return {
       'animalType': animalType,
+      'behavior': behavior,
       'description': description,
       'name': name,
       'sex': sex,
