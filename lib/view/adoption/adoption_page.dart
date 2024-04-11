@@ -76,12 +76,11 @@ class _AdoptionFormState extends State<AdoptionForm> {
                     labelText: 'Tipo de Animal',
                     border: OutlineInputBorder(),
                     labelStyle: TextStyle(
-                        color: Colors
-                            .black54), // Cor do texto do rótulo
+                        color: Colors.black54), // Cor do texto do rótulo
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: Colors
-                              .deepOrange), // Defina a cor desejada aqui
+                          color:
+                              Colors.deepOrange), // Defina a cor desejada aqui
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -107,6 +106,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                           _hasName = value!;
                         });
                       },
+                      activeColor: Color(0xFFb85b20)
                     ),
                     const Text('Sim'),
                     Radio(
@@ -120,6 +120,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                           }
                         });
                       },
+                      activeColor: Color(0xFFb85b20)
                     ),
                     const Text('Não'),
                   ],
@@ -130,18 +131,18 @@ class _AdoptionFormState extends State<AdoptionForm> {
                   enabled: _hasName,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                      labelStyle: TextStyle(
-                          color: Colors.black54), // Cor do texto do rótulo
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors
-                                .deepOrange), // Defina a cor desejada aqui
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(
-                                0xFFb85b20)), // Cor das bordas quando não está em foco
-                      ),
+                    labelStyle: TextStyle(
+                        color: Colors.black54), // Cor do texto do rótulo
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:
+                              Colors.deepOrange), // Defina a cor desejada aqui
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color(
+                              0xFFb85b20)), // Cor das bordas quando não está em foco
+                    ),
                     labelText: 'Nome',
                   ),
                 ),
@@ -177,12 +178,11 @@ class _AdoptionFormState extends State<AdoptionForm> {
                     labelText: 'Sexo',
                     border: OutlineInputBorder(),
                     labelStyle: TextStyle(
-                        color: Colors
-                            .black54), // Cor do texto do rótulo
+                        color: Colors.black54), // Cor do texto do rótulo
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color: Colors
-                              .deepOrange), // Defina a cor desejada aqui
+                          color:
+                              Colors.deepOrange), // Defina a cor desejada aqui
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -193,10 +193,10 @@ class _AdoptionFormState extends State<AdoptionForm> {
                 ),
                 const SizedBox(height: 20.0),
                 TextFormField(
-                  controller: _ageController,
-                  decoration: const InputDecoration(
-                    labelText: 'Idade',
-                    border: OutlineInputBorder(),
+                    controller: _ageController,
+                    decoration: const InputDecoration(
+                      labelText: 'Idade',
+                      border: OutlineInputBorder(),
                       labelStyle: TextStyle(
                           color: Colors.black54), // Cor do texto do rótulo
                       focusedBorder: OutlineInputBorder(
@@ -209,14 +209,13 @@ class _AdoptionFormState extends State<AdoptionForm> {
                             color: Color(
                                 0xFFb85b20)), // Cor das bordas quando não está em foco
                       ),
-                  )
-                ),
+                    )),
                 const SizedBox(height: 20.0),
                 TextFormField(
-                  controller: _vaccinesAndMedicinesController,
-                  decoration: const InputDecoration(
-                    labelText: 'Informações sobre vacinas/medicamentos',
-                    border: OutlineInputBorder(),
+                    controller: _vaccinesAndMedicinesController,
+                    decoration: const InputDecoration(
+                      labelText: 'Informações sobre vacinas/medicamentos',
+                      border: OutlineInputBorder(),
                       labelStyle: TextStyle(
                           color: Colors.black54), // Cor do texto do rótulo
                       focusedBorder: OutlineInputBorder(
@@ -229,15 +228,14 @@ class _AdoptionFormState extends State<AdoptionForm> {
                             color: Color(
                                 0xFFb85b20)), // Cor das bordas quando não está em foco
                       ),
-                  ),
-                  maxLines: 4
-                ),
+                    ),
+                    maxLines: 4),
                 const SizedBox(height: 20.0),
                 TextFormField(
-                  controller: _diseasesController,
-                  decoration: const InputDecoration(
-                    labelText: 'Informações sobre doenças',
-                    border: OutlineInputBorder(),
+                    controller: _diseasesController,
+                    decoration: const InputDecoration(
+                      labelText: 'Informações sobre doenças',
+                      border: OutlineInputBorder(),
                       labelStyle: TextStyle(
                           color: Colors.black54), // Cor do texto do rótulo
                       focusedBorder: OutlineInputBorder(
@@ -250,9 +248,8 @@ class _AdoptionFormState extends State<AdoptionForm> {
                             color: Color(
                                 0xFFb85b20)), // Cor das bordas quando não está em foco
                       ),
-                  ),
-                  maxLines: 4
-                ),
+                    ),
+                    maxLines: 4),
                 const SizedBox(height: 20.0),
                 DropdownButtonFormField<String>(
                   value: _selectedAnimalSize,
@@ -284,18 +281,12 @@ class _AdoptionFormState extends State<AdoptionForm> {
                   decoration: InputDecoration(
                     labelText: 'Porte',
                     border: OutlineInputBorder(),
-                    labelStyle: TextStyle(
-                        color: Colors
-                            .black54), 
+                    labelStyle: TextStyle(color: Colors.black54),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors
-                              .deepOrange), 
+                      borderSide: BorderSide(color: Colors.deepOrange),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Color(
-                              0xFFb85b20)),
+                      borderSide: BorderSide(color: Color(0xFFb85b20)),
                     ),
                   ),
                 ),
@@ -305,18 +296,13 @@ class _AdoptionFormState extends State<AdoptionForm> {
                   decoration: const InputDecoration(
                     labelText: 'Peso',
                     border: OutlineInputBorder(),
-                      labelStyle: TextStyle(
-                          color: Colors.black54),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors
-                                .deepOrange),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(
-                                0xFFb85b20)), 
-                      ),
+                    labelStyle: TextStyle(color: Colors.black54),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepOrange),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFb85b20)),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20.0),
@@ -325,18 +311,13 @@ class _AdoptionFormState extends State<AdoptionForm> {
                   decoration: const InputDecoration(
                     labelText: 'Informações familiares',
                     border: OutlineInputBorder(),
-                      labelStyle: TextStyle(
-                          color: Colors.black54),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors
-                                .deepOrange), 
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(
-                                0xFFb85b20)),
-                      ),
+                    labelStyle: TextStyle(color: Colors.black54),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepOrange),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFb85b20)),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20.0),
@@ -357,17 +338,18 @@ class _AdoptionFormState extends State<AdoptionForm> {
                           _selectedBehavior = value;
                         });
                       },
+                      activeColor: Color(0xFFb85b20),
                     ),
                     const Text('Calmo'),
                     Radio(
-                      value: 'Agitado',
-                      groupValue: _selectedBehavior,
-                      onChanged: (String? value) {
-                        setState(() {
-                          _selectedBehavior = value;
-                        });
-                      },
-                    ),
+                        value: 'Agitado',
+                        groupValue: _selectedBehavior,
+                        onChanged: (String? value) {
+                          setState(() {
+                            _selectedBehavior = value;
+                          });
+                        },
+                        activeColor: Color(0xFFb85b20)),
                     const Text('Agitado'),
                   ],
                 ),
@@ -377,18 +359,13 @@ class _AdoptionFormState extends State<AdoptionForm> {
                   decoration: const InputDecoration(
                     labelText: 'Descrição',
                     border: OutlineInputBorder(),
-                      labelStyle: TextStyle(
-                          color: Colors.black54),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Colors
-                                .deepOrange),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            color: Color(
-                                0xFFb85b20)),
-                      ),
+                    labelStyle: TextStyle(color: Colors.black54),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.deepOrange),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xFFb85b20)),
+                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -432,7 +409,8 @@ class _AdoptionFormState extends State<AdoptionForm> {
                               _nameController = TextEditingController();
                               _sexController = TextEditingController();
                               _ageController = TextEditingController();
-                              _vaccinesAndMedicinesController = TextEditingController();
+                              _vaccinesAndMedicinesController =
+                                  TextEditingController();
                               _diseasesController = TextEditingController();
                               _sizeController = TextEditingController();
                               _weightController = TextEditingController();
@@ -449,10 +427,10 @@ class _AdoptionFormState extends State<AdoptionForm> {
                         }
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Color(0xFFb85b20)),
-                        foregroundColor: MaterialStateProperty.all<Color>(
-                            Colors.white),
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Color(0xFFb85b20)),
+                        foregroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       child: Text('Salvar'),
                     ),
