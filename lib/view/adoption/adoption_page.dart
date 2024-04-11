@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-void main() {
-  runApp(MaterialApp(
-    home: AdoptionForm(),
-  ));
-}
+import 'package:meu_novo_aumigo/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class AdoptionForm extends StatefulWidget {
   @override
@@ -14,15 +10,30 @@ class AdoptionForm extends StatefulWidget {
 
 class _AdoptionFormState extends State<AdoptionForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String? _selectedAnimalType;
-  String? _selectedBehavior;
+  String? _selectedAnimalType = "Cachorro";
+  String? _selectedBehavior = "calmo";
+  String? _selectedAnimalSex = "Macho";
+  String? _selectedAnimalSize = "Pequeno";
   TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _sexController = TextEditingController();
+  TextEditingController _ageController = TextEditingController();
+  TextEditingController _vaccinesAndMedicinesController =
+      TextEditingController();
+  TextEditingController _diseasesController = TextEditingController();
+  TextEditingController _sizeController = TextEditingController();
+  TextEditingController _weightController = TextEditingController();
+  TextEditingController _familyInfoController = TextEditingController();
+  bool _hasName = true;
 
   @override
   Widget build(BuildContext context) {
+    var _auth = context.read<AuthService>();
+    var _userBd = _auth.userBD;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastro de Adoção de Animal'),
+        title: const Text('Cadastro de Adoção de Animal'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -33,13 +44,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Selecione o tipo de animal:',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                const SizedBox(height: 20.0),
                 DropdownButtonFormField<String>(
                   value: _selectedAnimalType,
                   onChanged: (String? value) {
@@ -53,7 +58,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                     }
                     return null;
                   },
-                  items: [
+                  items: const [
                     DropdownMenuItem(
                       value: 'Cachorro',
                       child: Text('Cachorro'),
@@ -67,9 +72,275 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       child: Text('Outros'),
                     ),
                   ],
+                  decoration: InputDecoration(
+                    labelText: 'Tipo de Animal',
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                        color: Colors
+                            .black54), // Cor do texto do rótulo
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors
+                              .deepOrange), // Defina a cor desejada aqui
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color(
+                              0xFFb85b20)), // Cor das bordas quando não está em foco
+                    ),
+                  ),
                 ),
-                SizedBox(height: 20.0),
-                Text(
+                const Text(
+                  'O animal possui nome?',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Row(
+                  children: [
+                    Radio(
+                      value: true,
+                      groupValue: _hasName,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _hasName = value!;
+                        });
+                      },
+                    ),
+                    const Text('Sim'),
+                    Radio(
+                      value: false,
+                      groupValue: _hasName,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _hasName = value!;
+                          if (!_hasName) {
+                            _nameController.text = '';
+                          }
+                        });
+                      },
+                    ),
+                    const Text('Não'),
+                  ],
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  controller: _nameController,
+                  enabled: _hasName,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                          color: Colors.black54), // Cor do texto do rótulo
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange), // Defina a cor desejada aqui
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)), // Cor das bordas quando não está em foco
+                      ),
+                    labelText: 'Nome',
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                DropdownButtonFormField<String>(
+                  value: _selectedAnimalSex,
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedAnimalSex = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Selecione o tipo de animal';
+                    }
+                    return null;
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'Macho',
+                      child: Text('Macho'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Fêmea',
+                      child: Text('Fêmea'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Não identificado',
+                      child: Text('Não identificado'),
+                    ),
+                  ],
+                  decoration: InputDecoration(
+                    labelText: 'Sexo',
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                        color: Colors
+                            .black54), // Cor do texto do rótulo
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors
+                              .deepOrange), // Defina a cor desejada aqui
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color(
+                              0xFFb85b20)), // Cor das bordas quando não está em foco
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  controller: _ageController,
+                  decoration: const InputDecoration(
+                    labelText: 'Idade',
+                    border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                          color: Colors.black54), // Cor do texto do rótulo
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange), // Defina a cor desejada aqui
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)), // Cor das bordas quando não está em foco
+                      ),
+                  )
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  controller: _vaccinesAndMedicinesController,
+                  decoration: const InputDecoration(
+                    labelText: 'Informações sobre vacinas/medicamentos',
+                    border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                          color: Colors.black54), // Cor do texto do rótulo
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange), // Defina a cor desejada aqui
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)), // Cor das bordas quando não está em foco
+                      ),
+                  ),
+                  maxLines: 4
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  controller: _diseasesController,
+                  decoration: const InputDecoration(
+                    labelText: 'Informações sobre doenças',
+                    border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                          color: Colors.black54), // Cor do texto do rótulo
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange), // Defina a cor desejada aqui
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)), // Cor das bordas quando não está em foco
+                      ),
+                  ),
+                  maxLines: 4
+                ),
+                const SizedBox(height: 20.0),
+                DropdownButtonFormField<String>(
+                  value: _selectedAnimalSize,
+                  onChanged: (String? value) {
+                    setState(() {
+                      _selectedAnimalSize = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Selecione o tipo de animal';
+                    }
+                    return null;
+                  },
+                  items: const [
+                    DropdownMenuItem(
+                      value: 'Pequeno',
+                      child: Text('Pequeno'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Médio',
+                      child: Text('Médio'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Grande',
+                      child: Text('Grande'),
+                    ),
+                  ],
+                  decoration: InputDecoration(
+                    labelText: 'Porte',
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(
+                        color: Colors
+                            .black54), 
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors
+                              .deepOrange), 
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color(
+                              0xFFb85b20)),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  controller: _weightController,
+                  decoration: const InputDecoration(
+                    labelText: 'Peso',
+                    border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                          color: Colors.black54),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)), 
+                      ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                TextFormField(
+                  controller: _familyInfoController,
+                  decoration: const InputDecoration(
+                    labelText: 'Informações familiares',
+                    border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                          color: Colors.black54),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange), 
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)),
+                      ),
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                const Text(
                   'Comportamento do animal:',
                   style: TextStyle(
                     fontSize: 18.0,
@@ -87,7 +358,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                         });
                       },
                     ),
-                    Text('Calmo'),
+                    const Text('Calmo'),
                     Radio(
                       value: 'Agitado',
                       groupValue: _selectedBehavior,
@@ -97,15 +368,27 @@ class _AdoptionFormState extends State<AdoptionForm> {
                         });
                       },
                     ),
-                    Text('Agitado'),
+                    const Text('Agitado'),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 TextFormField(
                   controller: _descriptionController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Descrição',
                     border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                          color: Colors.black54),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)),
+                      ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -115,7 +398,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                   },
                   maxLines: 4,
                 ),
-                SizedBox(height: 20.0),
+                const SizedBox(height: 20.0),
                 Row(
                   children: [
                     ElevatedButton(
@@ -128,14 +411,35 @@ class _AdoptionFormState extends State<AdoptionForm> {
                               'animalType': _selectedAnimalType,
                               'behavior': _selectedBehavior,
                               'description': _descriptionController.text,
+                              'name': _nameController.text,
+                              'sex': _sexController.text,
+                              'age': _ageController.text,
+                              'vaccinesAndMedicines':
+                                  _vaccinesAndMedicinesController.text,
+                              'diseases': _diseasesController.text,
+                              'size': _sizeController.text,
+                              'weight': _weightController.text,
+                              'familyInfo': _familyInfoController.text,
+                              'adopted': false,
+                              'userId': _userBd?.id
                             });
                             setState(() {
-                              _selectedAnimalType = null;
-                              _selectedBehavior = null;
+                              _selectedAnimalType = "Cachorro";
+                              _selectedBehavior = "calmo";
+                              _selectedAnimalSex = "Macho";
+                              _selectedAnimalSize = "Pequeno";
                               _descriptionController = TextEditingController();
+                              _nameController = TextEditingController();
+                              _sexController = TextEditingController();
+                              _ageController = TextEditingController();
+                              _vaccinesAndMedicinesController = TextEditingController();
+                              _diseasesController = TextEditingController();
+                              _sizeController = TextEditingController();
+                              _weightController = TextEditingController();
+                              _familyInfoController = TextEditingController();
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text('Registro salvo com sucesso!'),
                               ),
                             );
@@ -144,6 +448,12 @@ class _AdoptionFormState extends State<AdoptionForm> {
                           }
                         }
                       },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color(0xFFb85b20)),
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.white),
+                      ),
                       child: Text('Salvar'),
                     ),
                   ],
@@ -154,27 +464,5 @@ class _AdoptionFormState extends State<AdoptionForm> {
         ),
       ),
     );
-  }
-
-  void _fetchDocumentData() async {
-    if (_selectedAnimalType != null && _selectedAnimalType!.isNotEmpty) {
-      try {
-        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('adoptions')
-            .where('animalType', isEqualTo: _selectedAnimalType)
-            .get();
-        // Lógica para exibir os dados recuperados do Firebase Firestore
-        for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
-          print('ID: ${documentSnapshot.id}');
-          print('Tipo de Animal: ${documentSnapshot['animalType']}');
-          print('Comportamento: ${documentSnapshot['behavior']}');
-          print('Descrição: ${documentSnapshot['description']}');
-        }
-      } catch (e) {
-        print('Erro ao buscar os dados: $e');
-      }
-    } else {
-      print('Por favor, insira o tipo de animal.');
-    }
   }
 }
