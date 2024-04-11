@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meu_novo_aumigo/view/global/bottom_navigation.dart';
 import 'package:meu_novo_aumigo/view/global/feed_card.dart';
 import 'package:meu_novo_aumigo/view/global/sidebar.dart';
@@ -10,58 +11,31 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: TopBar(),
       drawer: Sidebar(),
-      body: ListView(children: [
-        Container(
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    FeedCard(
-                      imageUrls: [
-                        'https://via.placeholder.com/600x300',
-                        'https://via.placeholder.com/600x300',
-                        'https://via.placeholder.com/600x300',
-                      ],
-                      title: 'Card 1',
-                      description: 'Description for Card 1',
-                    ),
-                    FeedCard(
-                      imageUrls: [
-                        'https://via.placeholder.com/600x300',
-                        'https://via.placeholder.com/600x300',
-                        'https://via.placeholder.com/600x300',
-                      ],
-                      title: 'Card 2',
-                      description: 'Description for Card 2',
-                    ),
-                    FeedCard(
-                      imageUrls: [
-                        'https://via.placeholder.com/600x300',
-                        'https://via.placeholder.com/600x300',
-                        'https://via.placeholder.com/600x300',
-                      ],
-                      title: 'Card 1',
-                      description: 'Description for Card 1',
-                    ),
-                    FeedCard(
-                      imageUrls: [
-                        'https://via.placeholder.com/600x300',
-                        'https://via.placeholder.com/600x300',
-                        'https://via.placeholder.com/600x300',
-                      ],
-                      title: 'Card 2',
-                      description: 'Description for Card 2',
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ]),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('adoptions').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Text('Nenhuma adoção encontrada.'),
+            );
+          }
+          return ListView(
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+              return FeedCard(
+                imageUrls: data['images'].cast<String>(), 
+                title: data['name'],
+                description: data['description'],
+              );
+            }).toList(),
+          );
+        },
+      ),
       bottomNavigationBar: BottomNavigation(),
     );
   }

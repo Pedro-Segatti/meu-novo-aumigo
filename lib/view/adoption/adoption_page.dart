@@ -1,7 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:meu_novo_aumigo/view/global/bottom_navigation.dart';
+import 'package:meu_novo_aumigo/view/global/sidebar.dart';
+import 'package:meu_novo_aumigo/view/global/topbar.dart';
 
 class AdoptionForm extends StatefulWidget {
   @override
@@ -14,6 +21,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
   String? _selectedBehavior = "calmo";
   String? _selectedAnimalSex = "Macho";
   String? _selectedAnimalSize = "Pequeno";
+  List<File> _images = [];
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _sexController = TextEditingController();
@@ -35,6 +43,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
       appBar: AppBar(
         title: const Text('Cadastro de Adoção de Animal'),
       ),
+      drawer: Sidebar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -99,29 +108,27 @@ class _AdoptionFormState extends State<AdoptionForm> {
                 Row(
                   children: [
                     Radio(
-                      value: true,
-                      groupValue: _hasName,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _hasName = value!;
-                        });
-                      },
-                      activeColor: Color(0xFFb85b20)
-                    ),
+                        value: true,
+                        groupValue: _hasName,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _hasName = value!;
+                          });
+                        },
+                        activeColor: Color(0xFFb85b20)),
                     const Text('Sim'),
                     Radio(
-                      value: false,
-                      groupValue: _hasName,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _hasName = value!;
-                          if (!_hasName) {
-                            _nameController.text = '';
-                          }
-                        });
-                      },
-                      activeColor: Color(0xFFb85b20)
-                    ),
+                        value: false,
+                        groupValue: _hasName,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _hasName = value!;
+                            if (!_hasName) {
+                              _nameController.text = '';
+                            }
+                          });
+                        },
+                        activeColor: Color(0xFFb85b20)),
                     const Text('Não'),
                   ],
                 ),
@@ -367,13 +374,54 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       borderSide: BorderSide(color: Color(0xFFb85b20)),
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Digite uma descrição';
-                    }
-                    return null;
-                  },
                   maxLines: 4,
+                ),
+                const SizedBox(height: 20.0),
+                Text(
+                  'Adicionar Imagens',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: _images.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == _images.length) {
+                      return IconButton(
+                        onPressed: () async {
+                          final picker = ImagePicker();
+                          final pickedFile = await picker.getImage(
+                              source: ImageSource.gallery);
+                          if (pickedFile != null) {
+                            setState(() {
+                              _images.add(File(pickedFile.path));
+                            });
+                          }
+                        },
+                        icon: Icon(Icons.add),
+                      );
+                    } else {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _images.removeAt(index);
+                          });
+                        },
+                        child: Image.file(
+                          _images[index],
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    }
+                  },
                 ),
                 const SizedBox(height: 20.0),
                 Row(
@@ -381,6 +429,27 @@ class _AdoptionFormState extends State<AdoptionForm> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
+                          List<String> imageUrls = [];
+
+                          try {
+                            for (File image in _images) {
+                              String imageName = DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString();
+                              firebase_storage.Reference ref = firebase_storage
+                                  .FirebaseStorage.instance
+                                  .ref()
+                                  .child('images')
+                                  .child('$imageName.jpg');
+                              await ref.putFile(image);
+
+                              String imageUrl = await ref.getDownloadURL();
+                              imageUrls.add(imageUrl);
+                            }
+                          } catch (error) {
+                            print('Erro ao enviar imagens: $error');
+                          }
+
                           try {
                             await FirebaseFirestore.instance
                                 .collection('adoptions')
@@ -398,6 +467,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                               'weight': _weightController.text,
                               'familyInfo': _familyInfoController.text,
                               'adopted': false,
+                              'images': imageUrls,
                               'userId': _userBd?.id
                             });
                             setState(() {
@@ -405,6 +475,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                               _selectedBehavior = "calmo";
                               _selectedAnimalSex = "Macho";
                               _selectedAnimalSize = "Pequeno";
+                              _images = [];
                               _descriptionController = TextEditingController();
                               _nameController = TextEditingController();
                               _sexController = TextEditingController();
@@ -441,6 +512,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigation(),
     );
   }
 }
