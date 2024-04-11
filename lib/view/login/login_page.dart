@@ -46,13 +46,18 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Bem-vindo",
-                  style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -1.5,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      'assets/img/logo.png', // Coloque o caminho da sua imagem aqui
+                      fit: BoxFit
+                          .contain, // Ajuste da imagem dentro do espaço disponível
+                      height: 150, // Ajuste a altura conforme necessário
+                    ),
+                    const SizedBox(
+                        width: 8), // Espaçamento entre a imagem e o texto
+                  ],
                 ),
                 Padding(
                   padding: EdgeInsets.all(24),
@@ -60,7 +65,19 @@ class _LoginPageState extends State<LoginPage> {
                     controller: email,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Email',
+                      labelStyle: TextStyle(
+                          color: Colors.black54), // Cor do texto do rótulo
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange), // Defina a cor desejada aqui
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)), // Cor das bordas quando não está em foco
+                      ),
+                      labelText: 'E-mail',
                     ),
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
@@ -77,8 +94,20 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextFormField(
                     controller: senha,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
+                      labelStyle: TextStyle(
+                          color: Colors.black54), // Cor do texto do rótulo
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors
+                                .deepOrange), // Defina a cor desejada aqui
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color(
+                                0xFFb85b20)), // Cor das bordas quando não está em foco
+                      ),
                       labelText: 'Senha',
                     ),
                     validator: (value) {
@@ -92,13 +121,19 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(24.0),
+                  padding: EdgeInsets.only(top: 24, left: 24, right: 24),
                   child: ElevatedButton(
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         login();
                       }
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Color(0xFFb85b20)), // Cor de fundo do botão
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white), // Cor do texto e ícone do botão
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: (loading)
@@ -134,7 +169,32 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(builder: (context) => OngForm()),
                     );
                   }),
+                  style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xFFb85b20)),
+                    textStyle: MaterialStateProperty.all<TextStyle>(
+                      TextStyle(
+                          fontSize: 16), // Definindo o tamanho da fonte como 20
+                    ),
+                  ),
                   child: Text("Cadastre-se"),
+                ),
+                TextButton(
+                  onPressed: () =>
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  }),
+                  style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xFFb85b20)),
+                    textStyle: MaterialStateProperty.all<TextStyle>(
+                      TextStyle(
+                          fontSize: 16), // Definindo o tamanho da fonte como 20
+                    ),
+                  ),
+                  child: Text("Ir para o menu principal"),
                 ),
               ],
             ),

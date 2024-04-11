@@ -45,7 +45,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           );
         }
       },
-      unselectedItemColor: Colors.deepOrange,
+      unselectedItemColor: Color(0xFFb85b20),
       selectedItemColor: Colors.deepOrange,
       showUnselectedLabels: true,
       currentIndex: _currentIndex,

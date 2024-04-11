@@ -10,6 +10,7 @@ class App extends StatelessWidget {
       title: 'Meu Novo Aumigo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        primaryColor: Color(0xFFb85b20),
         primarySwatch: Colors.deepOrange,
       ),
       home: AuthCheck(),

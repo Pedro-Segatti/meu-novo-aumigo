@@ -6,15 +6,24 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text('Logo do Aplicativo'),
       automaticallyImplyLeading: false,
       centerTitle: true,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Image.asset(
+            'assets/img/logo.png', // Coloque o caminho da sua imagem aqui
+            fit: BoxFit.contain, // Ajuste da imagem dentro do espaço disponível
+            height: 45, // Ajuste a altura conforme necessário
+          ),
+          const SizedBox(width: 8), // Espaçamento entre a imagem e o texto
+        ],
+      ),
       bottom: PreferredSize(
-        preferredSize:
-            Size.fromHeight(1.0), // Define a altura da linha inferior
+        preferredSize: Size.fromHeight(1.0),
         child: Container(
-          color: Colors.grey, // Cor da linha inferior
-          height: 0.3, // Altura da linha inferior
+          color: Colors.grey,
+          height: 0.3,
         ),
       ),
     );

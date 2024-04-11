@@ -169,9 +169,10 @@ class _OngFormState extends State<OngForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(top: 100),
+          padding: EdgeInsets.only(top: 10),
           child: Form(
             key: formKey,
             child: Column(
@@ -206,6 +207,18 @@ class _OngFormState extends State<OngForm> {
                         controller: _name,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                           labelText: 'Nome',
                         ),
                         keyboardType: TextInputType.text,
@@ -225,6 +238,18 @@ class _OngFormState extends State<OngForm> {
                           labelText: 'Celular',
                           hintText: '(00)0 0000-0000',
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                         ),
                         validator: (value) {
                           if (value!.isEmpty || value.length < 11) {
@@ -242,6 +267,18 @@ class _OngFormState extends State<OngForm> {
                           labelText: 'CNPJ',
                           hintText: '00.000.000/0000-00',
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                         ),
                         validator: (value) {
                           if (value!.isEmpty || value.length < 18) {
@@ -297,6 +334,19 @@ class _OngFormState extends State<OngForm> {
                               decoration: InputDecoration(
                                 labelText: 'Selecione um estado',
                                 border: OutlineInputBorder(),
+                                labelStyle: TextStyle(
+                                    color: Colors
+                                        .black54), // Cor do texto do rótulo
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors
+                                          .deepOrange), // Defina a cor desejada aqui
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(
+                                          0xFFb85b20)), // Cor das bordas quando não está em foco
+                                ),
                               ),
                               validator: (value) {
                                 if (value == null) {
@@ -336,6 +386,19 @@ class _OngFormState extends State<OngForm> {
                               decoration: InputDecoration(
                                 labelText: 'Selecione uma cidade',
                                 border: OutlineInputBorder(),
+                                labelStyle: TextStyle(
+                                    color: Colors
+                                        .black54), // Cor do texto do rótulo
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors
+                                          .deepOrange), // Defina a cor desejada aqui
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(
+                                          0xFFb85b20)), // Cor das bordas quando não está em foco
+                                ),
                               ),
                               validator: (value) {
                                 if (value == null) {
@@ -352,6 +415,18 @@ class _OngFormState extends State<OngForm> {
                         controller: _neighborhood,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                           labelText: 'Bairro',
                         ),
                         validator: (value) {
@@ -366,6 +441,18 @@ class _OngFormState extends State<OngForm> {
                         controller: _street,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                           labelText: 'Rua',
                         ),
                         validator: (value) {
@@ -384,6 +471,18 @@ class _OngFormState extends State<OngForm> {
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                           labelText: 'Número',
                         ),
                         validator: (value) {
@@ -420,6 +519,18 @@ class _OngFormState extends State<OngForm> {
                           labelText:
                               'Conte-nos um pouco sobre a sua Instituição',
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                         ),
                         validator: (value) {
                           if (value!.isEmpty || value.length < 30) {
@@ -453,6 +564,18 @@ class _OngFormState extends State<OngForm> {
                         controller: _email,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                           labelText: 'Email',
                         ),
                         keyboardType: TextInputType.emailAddress,
@@ -469,6 +592,18 @@ class _OngFormState extends State<OngForm> {
                         obscureText: true,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
                           labelText: 'Senha',
                         ),
                         validator: (value) {
@@ -492,6 +627,12 @@ class _OngFormState extends State<OngForm> {
                         registrar();
                       }
                     },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Color(0xFFb85b20)), // Cor de fundo do botão
+                      foregroundColor: MaterialStateProperty.all<Color>(
+                          Colors.white), // Cor do texto e ícone do botão
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: (loading)
@@ -522,6 +663,14 @@ class _OngFormState extends State<OngForm> {
                 ),
                 // Botão de Voltar ao Login
                 TextButton(
+                  style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Color(0xFFb85b20)),
+                    textStyle: MaterialStateProperty.all<TextStyle>(
+                      TextStyle(
+                          fontSize: 16), // Definindo o tamanho da fonte como 20
+                    ),
+                  ),
                   onPressed: () =>
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                     Navigator.of(context).pushReplacement(

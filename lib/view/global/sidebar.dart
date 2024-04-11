@@ -25,7 +25,7 @@ class _SidebarState extends State<Sidebar> {
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.deepOrange,
+              color: Color(0xFFb85b20),
             ),
             child: Container(
               padding: EdgeInsets.all(
