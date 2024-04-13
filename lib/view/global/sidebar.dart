@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:meu_novo_aumigo/view/adoption/adoption_page.dart';
+import 'package:meu_novo_aumigo/view/adoption/adoption_list.dart';
 import 'package:meu_novo_aumigo/view/approval/approval.dart';
 import 'package:meu_novo_aumigo/view/login/login_page.dart';
 import 'package:provider/provider.dart';
@@ -49,12 +50,12 @@ class _SidebarState extends State<Sidebar> {
             visible: _auth.isLogged(), // Verifica se o usuário está logado
             child: ListTile(
               leading: Icon(Icons.pets),
-              title: Text("Nova Adoção"),
+              title: Text("Adoções"),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AdoptionForm(),
+                    builder: (context) => AdoptionList(),
                   ),
                 );
               },
@@ -64,7 +65,7 @@ class _SidebarState extends State<Sidebar> {
             visible: _auth.isLogged(), // Verifica se o usuário está logado
             child: ListTile(
               leading: Icon(Icons.volunteer_activism),
-              title: Text("Nova Doação"),
+              title: Text("Doações"),
               onTap: () {
                 Navigator.push(
                   context,

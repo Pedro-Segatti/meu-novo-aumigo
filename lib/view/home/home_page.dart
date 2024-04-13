@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TopBar(),
+      appBar: const TopBar(showBackButton: false),
       drawer: Sidebar(),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('adoptions').snapshots(),
