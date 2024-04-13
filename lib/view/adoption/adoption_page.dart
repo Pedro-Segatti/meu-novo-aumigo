@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meu_novo_aumigo/models/adoptions.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,28 +12,55 @@ import 'package:meu_novo_aumigo/view/global/sidebar.dart';
 import 'package:meu_novo_aumigo/view/global/topbar.dart';
 
 class AdoptionForm extends StatefulWidget {
+  final Map<String, dynamic>? adoption;
+
+  const AdoptionForm({Key? key, this.adoption}) : super(key: key);
+  
   @override
-  _AdoptionFormState createState() => _AdoptionFormState();
+  _AdoptionFormState createState() => _AdoptionFormState(adoption: adoption);
 }
 
 class _AdoptionFormState extends State<AdoptionForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Map<String, dynamic>? adoption;
+
+  _AdoptionFormState({this.adoption});
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String? _selectedAnimalType = "Cachorro";
-  String? _selectedBehavior = "calmo";
+  String? _selectedBehavior = "Calmo";
   String? _selectedAnimalSex = "Macho";
   String? _selectedAnimalSize = "Pequeno";
   List<File> _images = [];
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
-  TextEditingController _sexController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
   TextEditingController _vaccinesAndMedicinesController =
       TextEditingController();
   TextEditingController _diseasesController = TextEditingController();
-  TextEditingController _sizeController = TextEditingController();
   TextEditingController _weightController = TextEditingController();
   TextEditingController _familyInfoController = TextEditingController();
   bool _hasName = true;
+
+  @override
+  void initState() {
+    super.initState();
+    adoption = widget.adoption;
+    _formKey = GlobalKey<FormState>();
+    if ( adoption != null ) {
+      _selectedAnimalType = adoption?['animalType'] ?? "Cachorro";
+      _selectedBehavior = adoption?['behavior'] ?? "Calmo";
+      _selectedAnimalSex = adoption?['sex'] ?? "Macho";
+      _selectedAnimalSize = adoption?['size'] ?? "Pequeno";
+      _descriptionController = TextEditingController(text: adoption?['description']);
+      _nameController = TextEditingController(text: adoption?['name']);
+      _ageController = TextEditingController(text: adoption?['age']);
+      _vaccinesAndMedicinesController = TextEditingController(text: adoption?['vaccinesAndMedicines']);
+      _diseasesController = TextEditingController(text: adoption?['diseases']);
+      _weightController = TextEditingController(text: adoption?['weight']);
+      _familyInfoController = TextEditingController(text: adoption?['familyInfo']);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +68,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
     var _userBd = _auth.userBD;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cadastro de Adoção de Animal'),
-      ),
+      appBar: TopBar(),
       drawer: Sidebar(),
       body: SingleChildScrollView(
         child: Padding(
@@ -451,25 +477,25 @@ class _AdoptionFormState extends State<AdoptionForm> {
                           }
 
                           try {
+                            Adoptions adoption = Adoptions(
+                                animalType: _selectedAnimalType ?? "",
+                                size: _selectedAnimalSize ?? "",
+                                behavior: _selectedBehavior,
+                                description: _descriptionController.text,
+                                name: _nameController.text,
+                                sex: _selectedAnimalSex ?? "",
+                                age: _ageController.text,
+                                vaccinesAndMedicines:
+                                    _vaccinesAndMedicinesController.text,
+                                diseases: _diseasesController.text,
+                                weight: _weightController.text,
+                                familyInfo: _familyInfoController.text,
+                                adopted: false,
+                                images: imageUrls,
+                                userId: _userBd?.id);
                             await FirebaseFirestore.instance
                                 .collection('adoptions')
-                                .add({
-                              'animalType': _selectedAnimalType,
-                              'behavior': _selectedBehavior,
-                              'description': _descriptionController.text,
-                              'name': _nameController.text,
-                              'sex': _sexController.text,
-                              'age': _ageController.text,
-                              'vaccinesAndMedicines':
-                                  _vaccinesAndMedicinesController.text,
-                              'diseases': _diseasesController.text,
-                              'size': _sizeController.text,
-                              'weight': _weightController.text,
-                              'familyInfo': _familyInfoController.text,
-                              'adopted': false,
-                              'images': imageUrls,
-                              'userId': _userBd?.id
-                            });
+                                .add(adoption.toJson());
                             setState(() {
                               _selectedAnimalType = "Cachorro";
                               _selectedBehavior = "calmo";
@@ -478,12 +504,10 @@ class _AdoptionFormState extends State<AdoptionForm> {
                               _images = [];
                               _descriptionController = TextEditingController();
                               _nameController = TextEditingController();
-                              _sexController = TextEditingController();
                               _ageController = TextEditingController();
                               _vaccinesAndMedicinesController =
                                   TextEditingController();
                               _diseasesController = TextEditingController();
-                              _sizeController = TextEditingController();
                               _weightController = TextEditingController();
                               _familyInfoController = TextEditingController();
                             });
