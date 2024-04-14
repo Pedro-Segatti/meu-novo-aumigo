@@ -15,7 +15,7 @@ class AdoptionForm extends StatefulWidget {
   final Map<String, dynamic>? adoption;
 
   const AdoptionForm({Key? key, this.adoption}) : super(key: key);
-  
+
   @override
   _AdoptionFormState createState() => _AdoptionFormState(adoption: adoption);
 }
@@ -47,18 +47,21 @@ class _AdoptionFormState extends State<AdoptionForm> {
     super.initState();
     adoption = widget.adoption;
     _formKey = GlobalKey<FormState>();
-    if ( adoption != null ) {
+    if (adoption != null) {
       _selectedAnimalType = adoption?['animalType'] ?? "Cachorro";
       _selectedBehavior = adoption?['behavior'] ?? "Calmo";
       _selectedAnimalSex = adoption?['sex'] ?? "Macho";
       _selectedAnimalSize = adoption?['size'] ?? "Pequeno";
-      _descriptionController = TextEditingController(text: adoption?['description']);
+      _descriptionController =
+          TextEditingController(text: adoption?['description']);
       _nameController = TextEditingController(text: adoption?['name']);
       _ageController = TextEditingController(text: adoption?['age']);
-      _vaccinesAndMedicinesController = TextEditingController(text: adoption?['vaccinesAndMedicines']);
+      _vaccinesAndMedicinesController =
+          TextEditingController(text: adoption?['vaccinesAndMedicines']);
       _diseasesController = TextEditingController(text: adoption?['diseases']);
       _weightController = TextEditingController(text: adoption?['weight']);
-      _familyInfoController = TextEditingController(text: adoption?['familyInfo']);
+      _familyInfoController =
+          TextEditingController(text: adoption?['familyInfo']);
     }
   }
 
@@ -492,7 +495,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                                 familyInfo: _familyInfoController.text,
                                 adopted: false,
                                 images: imageUrls,
-                                userId: _userBd?.id);
+                                userId: _userBd?.id ?? "");
                             await FirebaseFirestore.instance
                                 .collection('adoptions')
                                 .add(adoption.toJson());

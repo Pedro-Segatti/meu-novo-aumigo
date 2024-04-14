@@ -10,13 +10,13 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    ModalRoute route = ModalRoute.of(context)!;
-    
     return AppBar(
-      leading: showBackButton ? IconButton(
-        icon: Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
-      ) : null,
+      leading: showBackButton
+          ? IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
+            )
+          : null,
       automaticallyImplyLeading: false,
       centerTitle: true,
       title: Row(
@@ -27,7 +27,6 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
             fit: BoxFit.contain, // Ajuste da imagem dentro do espaço disponível
             height: 45, // Ajuste a altura conforme necessário
           ),
-          const SizedBox(width: 8), // Espaçamento entre a imagem e o texto
         ],
       ),
       bottom: PreferredSize(

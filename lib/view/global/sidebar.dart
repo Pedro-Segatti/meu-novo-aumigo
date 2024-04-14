@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
-import 'package:meu_novo_aumigo/view/adoption/adoption_page.dart';
 import 'package:meu_novo_aumigo/view/adoption/adoption_list.dart';
 import 'package:meu_novo_aumigo/view/approval/approval.dart';
 import 'package:meu_novo_aumigo/view/login/login_page.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meu_novo_aumigo/models/adoptions.dart';
 import 'package:meu_novo_aumigo/view/global/bottom_navigation.dart';
 import 'package:meu_novo_aumigo/view/global/feed_card.dart';
 import 'package:meu_novo_aumigo/view/global/sidebar.dart';
@@ -26,12 +27,7 @@ class HomePage extends StatelessWidget {
           }
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-              return FeedCard(
-                imageUrls: data['images'].cast<String>(), 
-                title: data['name'],
-                description: data['description'],
-              );
+              return FeedCard(adoption: Adoptions.fromFirestore(document));
             }).toList(),
           );
         },
