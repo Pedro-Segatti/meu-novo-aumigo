@@ -56,8 +56,24 @@ class _BottomNavigationState extends State<BottomNavigation> {
           label: 'Menu',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.leaderboard),
-          label: 'Ranking',
+          icon: Align(
+            alignment: Alignment.center,
+            child: Container(
+              padding: EdgeInsets.all(
+                  8), // Adicione algum preenchimento para espaçamento
+              decoration: BoxDecoration(
+                shape:
+                    BoxShape.circle, // Define a forma do contêiner como círculo
+                color: Colors.deepOrange, // Cor de fundo do círculo
+              ),
+              child: Icon(
+                Icons.home,
+                color: Colors.white, // Cor do ícone
+                size: 25,
+              ),
+            ),
+          ),
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: _auth.isLogged()
