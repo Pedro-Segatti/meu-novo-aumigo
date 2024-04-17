@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meu_novo_aumigo/models/adoptions.dart';
@@ -10,20 +11,23 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:meu_novo_aumigo/view/global/bottom_navigation.dart';
 import 'package:meu_novo_aumigo/view/global/sidebar.dart';
 import 'package:meu_novo_aumigo/view/global/topbar.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AdoptionForm extends StatefulWidget {
   final Map<String, dynamic>? adoption;
+  final String? firebaseId;
 
-  const AdoptionForm({Key? key, this.adoption}) : super(key: key);
+  const AdoptionForm({Key? key, this.adoption, this.firebaseId}) : super(key: key);
 
   @override
-  _AdoptionFormState createState() => _AdoptionFormState(adoption: adoption);
+  _AdoptionFormState createState() => _AdoptionFormState(adoption: adoption, firebaseId: firebaseId);
 }
 
 class _AdoptionFormState extends State<AdoptionForm> {
   Map<String, dynamic>? adoption;
+  final String? firebaseId;
 
-  _AdoptionFormState({this.adoption});
+  _AdoptionFormState({this.adoption, this.firebaseId});
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -31,12 +35,11 @@ class _AdoptionFormState extends State<AdoptionForm> {
   String? _selectedBehavior = "Calmo";
   String? _selectedAnimalSex = "Macho";
   String? _selectedAnimalSize = "Pequeno";
-  List<File> _images = [];
+  List<String> _imageUrls = [];
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
-  TextEditingController _vaccinesAndMedicinesController =
-      TextEditingController();
+  TextEditingController _vaccinesAndMedicinesController = TextEditingController();
   TextEditingController _diseasesController = TextEditingController();
   TextEditingController _weightController = TextEditingController();
   TextEditingController _familyInfoController = TextEditingController();
@@ -52,17 +55,36 @@ class _AdoptionFormState extends State<AdoptionForm> {
       _selectedBehavior = adoption?['behavior'] ?? "Calmo";
       _selectedAnimalSex = adoption?['sex'] ?? "Macho";
       _selectedAnimalSize = adoption?['size'] ?? "Pequeno";
-      _descriptionController =
-          TextEditingController(text: adoption?['description']);
+      _descriptionController = TextEditingController(text: adoption?['description']);
+      List<dynamic> dynamicImageUrls =  adoption?['images'] ?? [];
+      List<String> imageUrls = dynamicImageUrls.map((url) => url.toString()).toList();
+      _imageUrls = imageUrls;
       _nameController = TextEditingController(text: adoption?['name']);
       _ageController = TextEditingController(text: adoption?['age']);
       _vaccinesAndMedicinesController =
           TextEditingController(text: adoption?['vaccinesAndMedicines']);
       _diseasesController = TextEditingController(text: adoption?['diseases']);
       _weightController = TextEditingController(text: adoption?['weight']);
-      _familyInfoController =
-          TextEditingController(text: adoption?['familyInfo']);
+      _familyInfoController = TextEditingController(text: adoption?['familyInfo']);
     }
+  }
+
+  void resetVariables() {
+    setState(() {
+      _selectedAnimalType = "Cachorro";
+      _selectedBehavior = "calmo";
+      _selectedAnimalSex = "Macho";
+      _selectedAnimalSize = "Pequeno";
+      _imageUrls = [];
+      _descriptionController = TextEditingController();
+      _nameController = TextEditingController();
+      _ageController = TextEditingController();
+      _vaccinesAndMedicinesController =
+          TextEditingController();
+      _diseasesController = TextEditingController();
+      _weightController = TextEditingController();
+      _familyInfoController = TextEditingController();
+    });
   }
 
   @override
@@ -421,18 +443,41 @@ class _AdoptionFormState extends State<AdoptionForm> {
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
-                  itemCount: _images.length + 1,
+                  itemCount: _imageUrls.length + 1,
                   itemBuilder: (context, index) {
-                    if (index == _images.length) {
+                    if (index == _imageUrls.length) {
                       return IconButton(
                         onPressed: () async {
                           final picker = ImagePicker();
-                          final pickedFile = await picker.getImage(
-                              source: ImageSource.gallery);
+                          final pickedFile = await picker.getImage(source: ImageSource.gallery);
                           if (pickedFile != null) {
-                            setState(() {
-                              _images.add(File(pickedFile.path));
-                            });
+                            File image = File(pickedFile.path);
+                            try {
+                              String imageName = DateTime.now().millisecondsSinceEpoch.toString();
+                              firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('images').child('$imageName.jpg');
+                              
+                              // Mostrar indicador de carregamento enquanto a imagem está sendo enviada
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false, // Impede que o usuário feche o diálogo
+                                builder: (BuildContext context) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              );
+                              
+                              await ref.putFile(image);
+                              String imageUrl = await ref.getDownloadURL();
+                              setState(() {
+                                _imageUrls.add(imageUrl);
+                              });
+                            } catch (error) {
+                              print('Erro ao enviar imagem: $error');
+                            } finally {
+                              // Fechar o diálogo de indicador de carregamento quando o processo de envio for concluído
+                              Navigator.pop(context);
+                            }
                           }
                         },
                         icon: Icon(Icons.add),
@@ -441,11 +486,11 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            _images.removeAt(index);
+                            _imageUrls.removeAt(index);
                           });
                         },
-                        child: Image.file(
-                          _images[index],
+                        child: Image.network(
+                          _imageUrls[index],
                           fit: BoxFit.cover,
                         ),
                       );
@@ -458,27 +503,6 @@ class _AdoptionFormState extends State<AdoptionForm> {
                     ElevatedButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
-                          List<String> imageUrls = [];
-
-                          try {
-                            for (File image in _images) {
-                              String imageName = DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString();
-                              firebase_storage.Reference ref = firebase_storage
-                                  .FirebaseStorage.instance
-                                  .ref()
-                                  .child('images')
-                                  .child('$imageName.jpg');
-                              await ref.putFile(image);
-
-                              String imageUrl = await ref.getDownloadURL();
-                              imageUrls.add(imageUrl);
-                            }
-                          } catch (error) {
-                            print('Erro ao enviar imagens: $error');
-                          }
-
                           try {
                             Adoptions adoption = Adoptions(
                                 animalType: _selectedAnimalType ?? "",
@@ -494,31 +518,28 @@ class _AdoptionFormState extends State<AdoptionForm> {
                                 weight: _weightController.text,
                                 familyInfo: _familyInfoController.text,
                                 adopted: false,
-                                images: imageUrls,
+                                images: _imageUrls,
                                 userId: _userBd?.id ?? "");
-                            await FirebaseFirestore.instance
-                                .collection('adoptions')
-                                .add(adoption.toJson());
-                            setState(() {
-                              _selectedAnimalType = "Cachorro";
-                              _selectedBehavior = "calmo";
-                              _selectedAnimalSex = "Macho";
-                              _selectedAnimalSize = "Pequeno";
-                              _images = [];
-                              _descriptionController = TextEditingController();
-                              _nameController = TextEditingController();
-                              _ageController = TextEditingController();
-                              _vaccinesAndMedicinesController =
-                                  TextEditingController();
-                              _diseasesController = TextEditingController();
-                              _weightController = TextEditingController();
-                              _familyInfoController = TextEditingController();
-                            });
+                            
+                            if (firebaseId == null) {
+                              await FirebaseFirestore.instance
+                                  .collection('adoptions')
+                                  .add(adoption.toJson());
+                            } else {
+                              await FirebaseFirestore.instance
+                                  .collection('adoptions')
+                                  .doc(firebaseId)
+                                  .update(adoption.toJson());
+                            }
+                              setState(() {
+                                resetVariables();
+                              });
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Registro salvo com sucesso!'),
                               ),
                             );
+                            Navigator.pop(context);
                           } catch (e) {
                             print('Erro ao enviar os dados: $e');
                           }

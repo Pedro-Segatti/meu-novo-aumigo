@@ -27,7 +27,7 @@ class AdoptionList extends StatelessWidget {
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-              return AdoptionCard(data: data);
+              return AdoptionCard(data: data, firebaseId: document.id);
             }).toList(),
           );
         },
@@ -58,8 +58,9 @@ class AdoptionList extends StatelessWidget {
 
 class AdoptionCard extends StatelessWidget {
   final Map<String, dynamic> data;
+  final String firebaseId;
 
-  const AdoptionCard({required this.data});
+  const AdoptionCard({required this.data, required this.firebaseId});
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class AdoptionCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AdoptionForm(adoption: data,),
+                builder: (context) => AdoptionForm(adoption: data, firebaseId: firebaseId),
               ),
             );
           },
