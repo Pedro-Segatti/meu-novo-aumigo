@@ -531,9 +531,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                                   .doc(firebaseId)
                                   .update(adoption.toJson());
                             }
-                              setState(() {
-                                resetVariables();
-                              });
+                            resetVariables();
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Registro salvo com sucesso!'),
