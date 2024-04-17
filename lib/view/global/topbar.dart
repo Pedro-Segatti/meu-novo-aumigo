@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:meu_novo_aumigo/view/global/sidebar.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackButton;
