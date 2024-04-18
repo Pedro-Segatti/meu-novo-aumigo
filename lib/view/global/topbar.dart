@@ -8,23 +8,30 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: showBackButton
-          ? IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context),
-            )
-          : null,
       automaticallyImplyLeading: false,
-      centerTitle: true,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Image.asset(
-            'assets/img/logo.png', // Coloque o caminho da sua imagem aqui
-            fit: BoxFit.contain, // Ajuste da imagem dentro do espaço disponível
-            height: 45, // Ajuste a altura conforme necessário
-          ),
-        ],
+      title: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            if (showBackButton)
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
+              ),
+            Expanded(
+              flex: showBackButton ? 1 : 2,
+              child: Container(
+                child: Image.asset(
+                  'assets/img/logo.png',
+                  fit: BoxFit.contain,
+                  height: 45,
+                ),
+              ),
+            ),
+            if (showBackButton)
+              SizedBox(width: 50)
+          ],
+        ),
       ),
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(1.0),
