@@ -485,9 +485,42 @@ class _AdoptionFormState extends State<AdoptionForm> {
                     } else {
                       return GestureDetector(
                         onTap: () {
-                          setState(() {
-                            _imageUrls.removeAt(index);
-                          });
+                          // Exibir uma caixa de diálogo de confirmação antes de remover a imagem
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Remover Imagem"),
+                                content: Text("Tem certeza que deseja remover esta imagem?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop(); // Fechar a caixa de diálogo
+                                    },
+                                    child: Text("Cancelar"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      // Remover a imagem do Firebase Storage
+                                      try {
+                                        await firebase_storage.FirebaseStorage.instance.refFromURL(_imageUrls[index]).delete();
+                                      } catch (error) {
+                                        print('Erro ao remover imagem do Firebase Storage: $error');
+                                      }
+                                      
+                                      // Remover a imagem da lista
+                                      setState(() {
+                                        _imageUrls.removeAt(index);
+                                      });
+                                      
+                                      Navigator.of(context).pop(); // Fechar a caixa de diálogo
+                                    },
+                                    child: Text("Remover"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         child: Image.network(
                           _imageUrls[index],
