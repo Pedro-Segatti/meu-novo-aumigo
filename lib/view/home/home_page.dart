@@ -58,8 +58,7 @@ class _HomePageState extends State<HomePage> {
     });
 
     Query adoptionsQuery = FirebaseFirestore.instance.collection('adoptions');
-
-    // Aplica o filtro se o tipo de animal selecionado for diferente de "Todos"
+    
     if (_selectedAnimalType != 'Todos') {
       adoptionsQuery =
           adoptionsQuery.where('animalType', isEqualTo: _selectedAnimalType);
@@ -98,6 +97,8 @@ class _HomePageState extends State<HomePage> {
       if (_adoptions != null && _adoptions!.isNotEmpty) {
         adoptionsQuery = adoptionsQuery.startAfterDocument(_adoptions!.last);
       }
+
+      adoptionsQuery = adoptionsQuery.where('adopted', isEqualTo: false);
 
       final QuerySnapshot adoptionsSnapshot = await adoptionsQuery.get();
 
