@@ -67,6 +67,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
       _diseasesController = TextEditingController(text: adoption?['diseases']);
       _weightController = TextEditingController(text: adoption?['weight']);
       _familyInfoController = TextEditingController(text: adoption?['familyInfo']);
+      _isAdopted = adoption?['adopted'] ?? false;
     }
   }
 
