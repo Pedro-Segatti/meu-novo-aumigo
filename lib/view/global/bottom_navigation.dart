@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:meu_novo_aumigo/view/home/home_page.dart';
 import 'package:meu_novo_aumigo/view/login/login_page.dart';
+import 'package:meu_novo_aumigo/view/ong_form/form.dart';
 import 'package:provider/provider.dart';
 
 class BottomNavigation extends StatefulWidget {
@@ -44,11 +45,17 @@ class _BottomNavigationState extends State<BottomNavigation> {
             ),
           );
         } else if (index == 2 && !_auth.isLogged()) {
-          // Navegar para a página de login quando o índice do menu for 3 e o usuário não estiver logado
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => LoginPage(),
+            ),
+          );
+        } else if (index == 2 && _auth.isLogged()) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OngForm(),
             ),
           );
         }

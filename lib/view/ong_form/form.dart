@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:meu_novo_aumigo/models/user_bd.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
+import 'package:meu_novo_aumigo/view/global/topbar.dart';
 import 'package:meu_novo_aumigo/view/home/home_page.dart';
 import 'package:meu_novo_aumigo/view/login/login_page.dart';
 import 'package:provider/provider.dart';
@@ -27,26 +28,43 @@ class _OngFormState extends State<OngForm> {
     super.initState();
     _futureCities = fetchCities();
     _futureStates = fetchStates();
+
+    var _auth = context.read<AuthService>();
+    var _user = _auth.user;
+    var _userDB = _auth.userBD;
+
+    if (_user != null) {
+      _name = TextEditingController(text: _userDB?.name);
+      _cnpj = TextEditingController(text: _userDB?.cnpj);
+      _cellphone = TextEditingController(text: _userDB?.cellphone);
+      _selectedState = _userDB?.state;
+      _selectedCity = _userDB?.city;
+      _neighborhood = TextEditingController(text: _userDB?.neighborhood);
+      _street = TextEditingController(text: _userDB?.street);
+      _houseNumber = TextEditingController(text: _userDB?.houseNumber);
+      _observation = TextEditingController(text: _userDB?.observation);
+      _email = TextEditingController(text: _userDB?.email);
+    }
   }
 
   bool loading = false;
   bool loadingPage = true;
 
   final formKey = GlobalKey<FormState>();
-  final _name = TextEditingController();
-  final _cnpj = TextEditingController();
-  final _cellphone = TextEditingController();
+  var _name = TextEditingController();
+  var _cnpj = TextEditingController();
+  var _cellphone = TextEditingController();
 
   String? _selectedState;
   String? _selectedCity;
-  final _neighborhood = TextEditingController();
-  final _street = TextEditingController();
-  final _houseNumber = TextEditingController();
+  var _neighborhood = TextEditingController();
+  var _street = TextEditingController();
+  var _houseNumber = TextEditingController();
 
-  final _observation = TextEditingController();
+  var _observation = TextEditingController();
 
-  final _email = TextEditingController();
-  final _password = TextEditingController();
+  var _email = TextEditingController();
+  var _password = TextEditingController();
 
   Future<List<String>> fetchCities() async {
     final response = await http.get(Uri.parse(
@@ -100,7 +118,9 @@ class _OngFormState extends State<OngForm> {
       // Coleção onde você quer armazenar os dados
       CollectionReference users = firestore.collection('users');
 
-      // Adicionando os dados
+      var _auth = context.read<AuthService>();
+      var _userDB = _auth.userBD;
+
       UserBD newUser = UserBD(
         name: _name.text,
         cnpj: getOnlyNumbers(_cnpj.text),
@@ -112,50 +132,92 @@ class _OngFormState extends State<OngForm> {
         houseNumber: _houseNumber.text,
         observation: _observation.text,
         email: _email.text,
-        status: "WA",
+        status: _auth.isLogged() ? _userDB!.status : "WA",
         role: "institution",
       );
-      await users.add(newUser.toJson());
 
-      await context
-          .read<AuthService>()
-          .registrar(_email.text, _password.text, _name.text);
+      if (!_auth.isLogged()) {
+        await users.add(newUser.toJson());
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Cadastro Realizado!'),
-            content: Container(
-              width: double.maxFinite,
-              child: const Text(
-                'O seu cadastro foi realizado com sucesso! Ele passará por uma fase de análise e assim que concluída, um e-mail será enviado para o endereço informado, permitindo o login no aplicativo. Agradecemos pelo cadastro e estamos ansiosos para ajudar nossos aumigos.',
-                textAlign: TextAlign.justify,
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.thumb_up),
-                    SizedBox(width: 8),
-                    Text(
-                      'Entendido',
-                    ),
-                  ],
+        await context
+            .read<AuthService>()
+            .registrar(_email.text, _password.text, _name.text);
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Cadastro Realizado!'),
+              content: Container(
+                width: double.maxFinite,
+                child: const Text(
+                  'O seu cadastro foi realizado com sucesso! Ele passará por uma fase de análise e assim que concluída, um e-mail será enviado para o endereço informado, permitindo o login no aplicativo. Agradecemos pelo cadastro e estamos ansiosos para ajudar nossos aumigos.',
+                  textAlign: TextAlign.justify,
                 ),
               ),
-            ],
-          );
-        },
-      );
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.thumb_up),
+                      SizedBox(width: 8),
+                      Text(
+                        'Entendido',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        await users.doc(_userDB?.id).update(newUser.toJson());
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Cadastro Atualizado!'),
+              content: Container(
+                width: double.maxFinite,
+                child: const Text(
+                  'O seu cadastro foi atualizado com sucesso!',
+                  textAlign: TextAlign.justify,
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    _auth.logout();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.thumb_up),
+                      SizedBox(width: 8),
+                      Text(
+                        'Entendido',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
     } on AuthException catch (e) {
       setState(() => loading = false);
       ScaffoldMessenger.of(context)
@@ -168,8 +230,10 @@ class _OngFormState extends State<OngForm> {
 
   @override
   Widget build(BuildContext context) {
+    var _auth = context.read<AuthService>();
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: TopBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.only(top: 10),
@@ -179,7 +243,7 @@ class _OngFormState extends State<OngForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Crie sua Conta",
+                  _auth.isLogged() ? "Edite sua Conta" : "Crie sua Conta",
                   style: TextStyle(
                     fontSize: 35,
                     fontWeight: FontWeight.bold,
@@ -281,7 +345,7 @@ class _OngFormState extends State<OngForm> {
                           ),
                         ),
                         validator: (value) {
-                          if (value!.isEmpty || value.length < 18) {
+                          if (value!.isEmpty || value.length < 14) {
                             return 'Informe um CNPJ válido';
                           }
                           return null;
@@ -543,79 +607,84 @@ class _OngFormState extends State<OngForm> {
                   ),
                 ),
 
-                // Seção E-mail e Senha
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Credenciais de Acesso",
-                        style: TextStyle(
-                          fontSize: 14,
+                Visibility(
+                  visible:
+                      !_auth.isLogged(), // Verifica se o usuário está logado
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Credenciais de Acesso",
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      Divider(
-                        color: const Color.fromARGB(255, 156, 156, 156),
-                        thickness: 0.3,
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        controller: _email,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelStyle: TextStyle(
-                              color: Colors.black54), // Cor do texto do rótulo
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors
-                                    .deepOrange), // Defina a cor desejada aqui
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color(
-                                    0xFFb85b20)), // Cor das bordas quando não está em foco
-                          ),
-                          labelText: 'Email',
+                        Divider(
+                          color: const Color.fromARGB(255, 156, 156, 156),
+                          thickness: 0.3,
                         ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Informe o email corretamente';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 15),
-                      TextFormField(
-                        controller: _password,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelStyle: TextStyle(
-                              color: Colors.black54), // Cor do texto do rótulo
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors
-                                    .deepOrange), // Defina a cor desejada aqui
+                        SizedBox(height: 10),
+                        TextFormField(
+                          controller: _email,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelStyle: TextStyle(
+                                color:
+                                    Colors.black54), // Cor do texto do rótulo
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors
+                                      .deepOrange), // Defina a cor desejada aqui
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(
+                                      0xFFb85b20)), // Cor das bordas quando não está em foco
+                            ),
+                            labelText: 'Email',
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color(
-                                    0xFFb85b20)), // Cor das bordas quando não está em foco
-                          ),
-                          labelText: 'Senha',
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Informe o email corretamente';
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Informe sua senha';
-                          } else if (value.length < 6) {
-                            return 'Sua senha deve ter no mínimo 6 caracteres';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
+                        SizedBox(height: 15),
+                        TextFormField(
+                          controller: _password,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelStyle: TextStyle(
+                                color:
+                                    Colors.black54), // Cor do texto do rótulo
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Colors
+                                      .deepOrange), // Defina a cor desejada aqui
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                  color: Color(
+                                      0xFFb85b20)), // Cor das bordas quando não está em foco
+                            ),
+                            labelText: 'Senha',
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Informe sua senha';
+                            } else if (value.length < 6) {
+                              return 'Sua senha deve ter no mínimo 6 caracteres';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 // Botão de Cadastro
@@ -653,7 +722,7 @@ class _OngFormState extends State<OngForm> {
                               Padding(
                                 padding: EdgeInsets.all(16.0),
                                 child: Text(
-                                  "Cadastrar",
+                                  !_auth.isLogged() ? "Cadastrar" : "Salvar",
                                   style: TextStyle(fontSize: 20),
                                 ),
                               ),
