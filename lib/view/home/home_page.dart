@@ -70,6 +70,7 @@ class _HomePageState extends State<HomePage> {
           adoptionsQuery.where('size', isEqualTo: _selectedAnimalSize);
     }
 
+    List<String> userIds = [];
     if (_selectedCity != null && _selectedCity!.isNotEmpty) {
       String selectedCityLowerCase = _selectedCity!.toLowerCase();
 
@@ -78,7 +79,6 @@ class _HomePageState extends State<HomePage> {
             .map((doc) => doc["city"].toString().toLowerCase())
             .toList();
 
-        List<String> userIds = [];
         for (int i = 0; i < usersSnapshot.docs.length; i++) {
           if (citiesLowerCase[i].contains(selectedCityLowerCase)) {
             userIds.add(usersSnapshot.docs[i].id);
@@ -86,23 +86,27 @@ class _HomePageState extends State<HomePage> {
         }
 
         // Aplicar a lista filtrada de IDs de usuários
-        adoptionsQuery = adoptionsQuery.where('userId', whereIn: userIds);
+        if ( userIds.isNotEmpty ) {
+          adoptionsQuery = adoptionsQuery.where('userId', whereIn: userIds);
+        }
       }
     }
 
-    adoptionsQuery = adoptionsQuery.limit(_batchSize);
+    if ( userIds.isNotEmpty || (_selectedCity == null || _selectedCity!.isEmpty)  ) {
+      adoptionsQuery = adoptionsQuery.limit(_batchSize);
 
-    if (_adoptions != null && _adoptions!.isNotEmpty) {
-      adoptionsQuery = adoptionsQuery.startAfterDocument(_adoptions!.last);
+      if (_adoptions != null && _adoptions!.isNotEmpty) {
+        adoptionsQuery = adoptionsQuery.startAfterDocument(_adoptions!.last);
+      }
+
+      final QuerySnapshot adoptionsSnapshot = await adoptionsQuery.get();
+
+      setState(() {
+        _adoptions ??= [];
+        _adoptions!.addAll(adoptionsSnapshot.docs);
+        _loadingMore = false;
+      });
     }
-
-    final QuerySnapshot adoptionsSnapshot = await adoptionsQuery.get();
-
-    setState(() {
-      _adoptions ??= [];
-      _adoptions!.addAll(adoptionsSnapshot.docs);
-      _loadingMore = false;
-    });
   }
 
   void _updateAnimalTypeFilter(String animaltype) {
