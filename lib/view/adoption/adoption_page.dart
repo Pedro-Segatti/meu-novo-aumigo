@@ -44,6 +44,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
   TextEditingController _weightController = TextEditingController();
   TextEditingController _familyInfoController = TextEditingController();
   bool _hasName = true;
+  bool _isAdopted = false;
 
   @override
   void initState() {
@@ -104,7 +105,48 @@ class _AdoptionFormState extends State<AdoptionForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20.0),
+                Visibility(
+                  visible: firebaseId != null,
+                  child: const Text(
+                    'O animal foi adotado?',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                ),),
+                Visibility(
+                  visible: firebaseId != null,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Radio(
+                            value: true,
+                            groupValue: _isAdopted,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isAdopted = value!;
+                              });
+                            },
+                            activeColor: Color(0xFFb85b20)
+                          ),
+                          Text('Sim'),
+                          Radio(
+                            value: false,
+                            groupValue: _isAdopted,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                _isAdopted = value!;
+                              });
+                            },
+                            activeColor: Color(0xFFb85b20)
+                          ),
+                          Text('Não'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
                 DropdownButtonFormField<String>(
                   value: _selectedAnimalType,
                   onChanged: (String? value) {
@@ -132,7 +174,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       child: Text('Outros'),
                     ),
                   ],
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Tipo de Animal',
                     border: OutlineInputBorder(),
                     labelStyle: TextStyle(
@@ -232,7 +274,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       child: Text('Não identificado'),
                     ),
                   ],
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Sexo',
                     border: OutlineInputBorder(),
                     labelStyle: TextStyle(
@@ -336,7 +378,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       child: Text('Grande'),
                     ),
                   ],
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Porte',
                     border: OutlineInputBorder(),
                     labelStyle: TextStyle(color: Colors.black54),
@@ -428,17 +470,17 @@ class _AdoptionFormState extends State<AdoptionForm> {
                   maxLines: 4,
                 ),
                 const SizedBox(height: 20.0),
-                Text(
+                const Text(
                   'Adicionar Imagens',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 GridView.builder(
                   shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
@@ -550,7 +592,7 @@ class _AdoptionFormState extends State<AdoptionForm> {
                                 diseases: _diseasesController.text,
                                 weight: _weightController.text,
                                 familyInfo: _familyInfoController.text,
-                                adopted: false,
+                                adopted: _isAdopted,
                                 images: _imageUrls,
                                 userId: _userBd?.id ?? "");
                             
