@@ -7,6 +7,7 @@ import 'package:meu_novo_aumigo/models/adoptions.dart';
 import 'package:meu_novo_aumigo/models/user_bd.dart';
 import 'package:meu_novo_aumigo/services/whatsapp_service.dart';
 import 'package:meu_novo_aumigo/view/global/topbar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FeedCardDetail extends StatefulWidget {
   final Adoptions adoption;
@@ -289,6 +290,98 @@ class _FeedCardDetailState extends State<FeedCardDetail> {
                                 ],
                               ),
                             ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 8, top: 8),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  if (_userBD.instagram_link != null) {
+                                    await launch(_userBD.instagram_link!);
+                                  }
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Icon(
+                                        FontAwesomeIcons.instagram,
+                                        color: Colors.deepOrange,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  if (_userBD.facebook_link != null) {
+                                    await launch(_userBD.facebook_link!);
+                                  }
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Icon(
+                                        FontAwesomeIcons.facebook,
+                                        color: Colors.deepOrange,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  if (_userBD.x_link != null) {
+                                    await launch(_userBD.x_link!);
+                                  }
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Icon(
+                                        FontAwesomeIcons.twitter,
+                                        color: Colors.deepOrange,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  if (_userBD.tiktok_link != null) {
+                                    await launch(_userBD.tiktok_link!);
+                                  }
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Icon(
+                                        FontAwesomeIcons.tiktok,
+                                        color: Colors.deepOrange,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),

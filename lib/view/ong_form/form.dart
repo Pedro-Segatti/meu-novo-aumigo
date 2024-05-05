@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -44,6 +45,10 @@ class _OngFormState extends State<OngForm> {
       _houseNumber = TextEditingController(text: _userDB?.houseNumber);
       _observation = TextEditingController(text: _userDB?.observation);
       _email = TextEditingController(text: _userDB?.email);
+      _instagram_link = TextEditingController(text: _userDB?.instagram_link);
+      _facebook_link = TextEditingController(text: _userDB?.facebook_link);
+      _x_link = TextEditingController(text: _userDB?.x_link);
+      _tiktok_link = TextEditingController(text: _userDB?.tiktok_link);
     }
   }
 
@@ -62,6 +67,11 @@ class _OngFormState extends State<OngForm> {
   var _houseNumber = TextEditingController();
 
   var _observation = TextEditingController();
+
+  var _instagram_link = TextEditingController();
+  var _facebook_link = TextEditingController();
+  var _x_link = TextEditingController();
+  var _tiktok_link = TextEditingController();
 
   var _email = TextEditingController();
   var _password = TextEditingController();
@@ -134,6 +144,10 @@ class _OngFormState extends State<OngForm> {
         email: _email.text,
         status: _auth.isLogged() ? _userDB!.status : "WA",
         role: "institution",
+        instagram_link: _instagram_link.text,
+        facebook_link: _facebook_link.text,
+        x_link: _x_link.text,
+        tiktok_link: _tiktok_link.text,
       );
 
       if (!_auth.isLogged()) {
@@ -607,6 +621,97 @@ class _OngFormState extends State<OngForm> {
                   ),
                 ),
 
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Redes Sociais",
+                        style: TextStyle(
+                          fontSize: 14,
+                        ),
+                      ),
+                      Divider(
+                        color: const Color.fromARGB(255, 156, 156, 156),
+                        thickness: 0.3,
+                      ),
+                      SizedBox(height: 10),
+                      // Campo Instagram
+                      TextFormField(
+                        controller: _instagram_link,
+                        decoration: InputDecoration(
+                          labelText: 'Link do Instagram',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(
+                              FontAwesomeIcons.instagram), // Ícone do Instagram
+                          labelStyle: TextStyle(color: Colors.black54),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepOrange),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFb85b20)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      // Campo Facebook
+                      TextFormField(
+                        controller: _facebook_link,
+                        decoration: InputDecoration(
+                          labelText: 'Link do Facebook',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(
+                              FontAwesomeIcons.facebook), // Ícone do Facebook
+                          labelStyle: TextStyle(color: Colors.black54),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepOrange),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFb85b20)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      // Campo X
+                      TextFormField(
+                        controller: _x_link,
+                        decoration: InputDecoration(
+                          labelText: 'Link do X',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(FontAwesomeIcons
+                              .times), // Ícone para a rede social X
+                          labelStyle: TextStyle(color: Colors.black54),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepOrange),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFb85b20)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      // Campo TikTok
+                      TextFormField(
+                        controller: _tiktok_link,
+                        decoration: InputDecoration(
+                          labelText: 'Link do TikTok',
+                          border: OutlineInputBorder(),
+                          prefixIcon:
+                              Icon(FontAwesomeIcons.tiktok), // Ícone do TikTok
+                          labelStyle: TextStyle(color: Colors.black54),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.deepOrange),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xFFb85b20)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
                 Visibility(
                   visible:
                       !_auth.isLogged(), // Verifica se o usuário está logado
@@ -730,23 +835,28 @@ class _OngFormState extends State<OngForm> {
                     ),
                   ),
                 ),
-                // Botão de Voltar ao Login
-                TextButton(
-                  style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Color(0xFFb85b20)),
-                    textStyle: MaterialStateProperty.all<TextStyle>(
-                      TextStyle(
-                          fontSize: 16), // Definindo o tamanho da fonte como 20
+
+                Visibility(
+                  visible:
+                      !_auth.isLogged(), // Verifica se o usuário está logado
+                  child: TextButton(
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Color(0xFFb85b20)),
+                      textStyle: MaterialStateProperty.all<TextStyle>(
+                        TextStyle(
+                            fontSize:
+                                16), // Definindo o tamanho da fonte como 20
+                      ),
                     ),
+                    onPressed: () =>
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    }),
+                    child: Text("Voltar ao Login"),
                   ),
-                  onPressed: () =>
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => LoginPage()),
-                    );
-                  }),
-                  child: Text("Voltar ao Login"),
                 ),
               ],
             ),

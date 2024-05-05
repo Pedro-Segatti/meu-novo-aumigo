@@ -14,6 +14,10 @@ class UserBD {
   final String email;
   final String status;
   final String role;
+  final String? instagram_link;
+  final String? facebook_link;
+  final String? x_link;
+  final String? tiktok_link;
 
   UserBD({
     this.id,
@@ -29,6 +33,10 @@ class UserBD {
     required this.email,
     required this.status,
     required this.role,
+    this.instagram_link,
+    this.facebook_link,
+    this.x_link,
+    this.tiktok_link,
   });
 
   factory UserBD.fromFirestore(DocumentSnapshot doc) {
@@ -47,6 +55,10 @@ class UserBD {
       email: data['email'] ?? '',
       status: data['status'] ?? '',
       role: data['role'] ?? '',
+      instagram_link: data['instagram_link'] ?? '',
+      facebook_link: data['facebook_link'] ?? '',
+      x_link: data['x_link'] ?? '',
+      tiktok_link: data['tiktok_link'] ?? '',
     );
   }
 
@@ -64,6 +76,10 @@ class UserBD {
       'email': email,
       'status': status,
       'role': role,
+      'instagram_link': instagram_link,
+      'facebook_link': facebook_link,
+      'x_link': x_link,
+      'tiktok_link': tiktok_link,
     };
   }
 
