@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meu_novo_aumigo/models/user_bd.dart';
 import 'package:meu_novo_aumigo/view/approval/approval.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserDetail extends StatelessWidget {
   final UserBD userBD;
@@ -55,6 +57,101 @@ class UserDetail extends StatelessWidget {
               userDetailsRow('Rua', userBD.street),
               userDetailsRow('Número', userBD.houseNumber),
               userDetailsRow('Observação', userBD.observation),
+              Padding(
+                padding: EdgeInsets.zero,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (userBD.instagram_link != null &&
+                              userBD.instagram_link != "") {
+                            await launch(userBD.instagram_link!);
+                          }
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(
+                                FontAwesomeIcons.instagram,
+                                color: Colors.deepOrange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (userBD.facebook_link != null &&
+                              userBD.facebook_link != "") {
+                            await launch(userBD.facebook_link!);
+                          }
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(
+                                FontAwesomeIcons.facebook,
+                                color: Colors.deepOrange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (userBD.x_link != null && userBD.x_link != "") {
+                            await launch(userBD.x_link!);
+                          }
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(
+                                FontAwesomeIcons.twitter,
+                                color: Colors.deepOrange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          if (userBD.tiktok_link != null &&
+                              userBD.tiktok_link != "") {
+                            await launch(userBD.tiktok_link!);
+                          }
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(
+                                FontAwesomeIcons.tiktok,
+                                color: Colors.deepOrange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),

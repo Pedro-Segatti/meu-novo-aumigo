@@ -301,7 +301,8 @@ class _FeedCardDetailState extends State<FeedCardDetail> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () async {
-                                  if (_userBD.instagram_link != null) {
+                                  if (_userBD.instagram_link != null &&
+                                      _userBD.instagram_link != "") {
                                     await launch(_userBD.instagram_link!);
                                   }
                                 },
@@ -322,7 +323,8 @@ class _FeedCardDetailState extends State<FeedCardDetail> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () async {
-                                  if (_userBD.facebook_link != null) {
+                                  if (_userBD.facebook_link != null &&
+                                      _userBD.facebook_link != "") {
                                     await launch(_userBD.facebook_link!);
                                   }
                                 },
@@ -343,7 +345,8 @@ class _FeedCardDetailState extends State<FeedCardDetail> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () async {
-                                  if (_userBD.x_link != null) {
+                                  if (_userBD.x_link != null &&
+                                      _userBD.x_link != "") {
                                     await launch(_userBD.x_link!);
                                   }
                                 },
@@ -364,7 +367,8 @@ class _FeedCardDetailState extends State<FeedCardDetail> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () async {
-                                  if (_userBD.tiktok_link != null) {
+                                  if (_userBD.tiktok_link != null &&
+                                      _userBD.tiktok_link != "") {
                                     await launch(_userBD.tiktok_link!);
                                   }
                                 },

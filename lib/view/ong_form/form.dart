@@ -143,7 +143,7 @@ class _OngFormState extends State<OngForm> {
         observation: _observation.text,
         email: _email.text,
         status: _auth.isLogged() ? _userDB!.status : "WA",
-        role: "institution",
+        role: _auth.isLogged() ? _userDB!.role : "institution",
         instagram_link: _instagram_link.text,
         facebook_link: _facebook_link.text,
         x_link: _x_link.text,
