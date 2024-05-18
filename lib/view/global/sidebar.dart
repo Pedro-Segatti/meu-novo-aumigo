@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:meu_novo_aumigo/view/adoption/adoption_list.dart';
 import 'package:meu_novo_aumigo/view/approval/approval.dart';
+import 'package:meu_novo_aumigo/view/donation/donation_list.dart';
 import 'package:meu_novo_aumigo/view/login/login_page.dart';
+import 'package:meu_novo_aumigo/view/donation/donation_page.dart';
 import 'package:provider/provider.dart';
 
 class Sidebar extends StatefulWidget {
@@ -69,7 +71,7 @@ class _SidebarState extends State<Sidebar> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginPage(),
+                    builder: (context) => DonationList(),
                   ),
                 );
               },
