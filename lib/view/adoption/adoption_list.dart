@@ -12,7 +12,11 @@ class AdoptionList extends StatelessWidget {
       appBar: TopBar(),
       drawer: Sidebar(),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('adoptions').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('adoptions')
+            .orderBy('adopted')
+            .orderBy('name')
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -21,14 +25,18 @@ class AdoptionList extends StatelessWidget {
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return Center(
-              child:  Text('Nenhuma adoção encontrada.'),
+              child: Text('Nenhuma adoção encontrada.'),
             );
           }
           return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-              return AdoptionCard(data: data, firebaseId: document.id);
-            }).toList(),
+            children: [
+              ...snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data =
+                    document.data() as Map<String, dynamic>;
+                return AdoptionCard(data: data, firebaseId: document.id);
+              }).toList(),
+              SizedBox(height: 100),
+            ],
           );
         },
       ),
@@ -42,7 +50,9 @@ class AdoptionList extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AdoptionForm(adoption: null,),
+                  builder: (context) => AdoptionForm(
+                    adoption: null,
+                  ),
                 ),
               );
             },
@@ -67,15 +77,27 @@ class AdoptionCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.all(10),
       child: ListTile(
-        title: Text(data['name']),
-        subtitle: Text(data['animalType'] + ' ' + data['sex']),
+        leading: CircleAvatar(
+          backgroundImage: data['images'].length != 0
+              ? NetworkImage(data['images'][0])
+              : NetworkImage(""),
+        ),
+        title: Text(data['name'] != null && data['name'] != ''
+            ? data['name']
+            : 'Sem nome'),
+        subtitle: Text(data['animalType'] +
+            ' ' +
+            data['sex'] +
+            ' ' +
+            (data['adopted'] ? '(Adotado)' : '')),
         trailing: IconButton(
           icon: const Icon(Icons.edit),
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => AdoptionForm(adoption: data, firebaseId: firebaseId),
+                builder: (context) =>
+                    AdoptionForm(adoption: data, firebaseId: firebaseId),
               ),
             );
           },
