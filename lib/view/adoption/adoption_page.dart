@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:meu_novo_aumigo/models/adoptions.dart';
 import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:provider/provider.dart';
@@ -17,10 +18,12 @@ class AdoptionForm extends StatefulWidget {
   final Map<String, dynamic>? adoption;
   final String? firebaseId;
 
-  const AdoptionForm({Key? key, this.adoption, this.firebaseId}) : super(key: key);
+  const AdoptionForm({Key? key, this.adoption, this.firebaseId})
+      : super(key: key);
 
   @override
-  _AdoptionFormState createState() => _AdoptionFormState(adoption: adoption, firebaseId: firebaseId);
+  _AdoptionFormState createState() =>
+      _AdoptionFormState(adoption: adoption, firebaseId: firebaseId);
 }
 
 class _AdoptionFormState extends State<AdoptionForm> {
@@ -39,12 +42,15 @@ class _AdoptionFormState extends State<AdoptionForm> {
   TextEditingController _descriptionController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
-  TextEditingController _vaccinesAndMedicinesController = TextEditingController();
+  TextEditingController _vaccinesAndMedicinesController =
+      TextEditingController();
   TextEditingController _diseasesController = TextEditingController();
   TextEditingController _weightController = TextEditingController();
   TextEditingController _familyInfoController = TextEditingController();
   bool _hasName = true;
   bool _isAdopted = false;
+  TextEditingController _adopterNameController = TextEditingController();
+  TextEditingController _adopterCpfController = TextEditingController();
 
   @override
   void initState() {
@@ -56,9 +62,11 @@ class _AdoptionFormState extends State<AdoptionForm> {
       _selectedBehavior = adoption?['behavior'] ?? "Calmo";
       _selectedAnimalSex = adoption?['sex'] ?? "Macho";
       _selectedAnimalSize = adoption?['size'] ?? "Pequeno";
-      _descriptionController = TextEditingController(text: adoption?['description']);
-      List<dynamic> dynamicImageUrls =  adoption?['images'] ?? [];
-      List<String> imageUrls = dynamicImageUrls.map((url) => url.toString()).toList();
+      _descriptionController =
+          TextEditingController(text: adoption?['description']);
+      List<dynamic> dynamicImageUrls = adoption?['images'] ?? [];
+      List<String> imageUrls =
+          dynamicImageUrls.map((url) => url.toString()).toList();
       _imageUrls = imageUrls;
       _nameController = TextEditingController(text: adoption?['name']);
       _ageController = TextEditingController(text: adoption?['age']);
@@ -66,10 +74,20 @@ class _AdoptionFormState extends State<AdoptionForm> {
           TextEditingController(text: adoption?['vaccinesAndMedicines']);
       _diseasesController = TextEditingController(text: adoption?['diseases']);
       _weightController = TextEditingController(text: adoption?['weight']);
-      _familyInfoController = TextEditingController(text: adoption?['familyInfo']);
+      _familyInfoController =
+          TextEditingController(text: adoption?['familyInfo']);
       _isAdopted = adoption?['adopted'] ?? false;
+      _adopterNameController =
+          TextEditingController(text: adoption?['adopterName']);
+      _adopterCpfController =
+          TextEditingController(text: adoption?['adopterCpf']);
     }
   }
+
+  final _cpfMaskFormatter = MaskTextInputFormatter(
+    mask: '###.###.###-##',
+    filter: {"#": RegExp(r'[0-9]')},
+  );
 
   void resetVariables() {
     setState(() {
@@ -81,11 +99,12 @@ class _AdoptionFormState extends State<AdoptionForm> {
       _descriptionController = TextEditingController();
       _nameController = TextEditingController();
       _ageController = TextEditingController();
-      _vaccinesAndMedicinesController =
-          TextEditingController();
+      _vaccinesAndMedicinesController = TextEditingController();
       _diseasesController = TextEditingController();
       _weightController = TextEditingController();
       _familyInfoController = TextEditingController();
+      _adopterNameController = TextEditingController();
+      _adopterCpfController = TextEditingController();
     });
   }
 
@@ -114,7 +133,8 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                     ),
-                ),),
+                  ),
+                ),
                 Visibility(
                   visible: firebaseId != null,
                   child: Column(
@@ -122,29 +142,94 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       Row(
                         children: [
                           Radio(
-                            value: true,
-                            groupValue: _isAdopted,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _isAdopted = value!;
-                              });
-                            },
-                            activeColor: Color(0xFFb85b20)
-                          ),
+                              value: true,
+                              groupValue: _isAdopted,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _isAdopted = value!;
+                                  _adopterNameController =
+                                      TextEditingController();
+                                  _adopterCpfController =
+                                      TextEditingController();
+                                });
+                              },
+                              activeColor: Color(0xFFb85b20)),
                           Text('Sim'),
                           Radio(
-                            value: false,
-                            groupValue: _isAdopted,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                _isAdopted = value!;
-                              });
-                            },
-                            activeColor: Color(0xFFb85b20)
-                          ),
+                              value: false,
+                              groupValue: _isAdopted,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  _isAdopted = value!;
+                                  _adopterNameController =
+                                      TextEditingController();
+                                  _adopterCpfController =
+                                      TextEditingController();
+                                });
+                              },
+                              activeColor: Color(0xFFb85b20)),
                           Text('Não'),
                         ],
                       ),
+                      const SizedBox(height: 20.0),
+                      TextFormField(
+                        controller: _adopterNameController,
+                        enabled: _isAdopted,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
+                          labelText: 'Nome do Tutor',
+                        ),
+                        validator: (value) {
+                          if (_isAdopted && (value == null || value.isEmpty)) {
+                            return 'Informe o Nome do tutor';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20.0),
+                      TextFormField(
+                        controller: _adopterCpfController,
+                        enabled: _isAdopted,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [_cpfMaskFormatter],
+                        decoration: InputDecoration(
+                          labelText: 'CPF do Tutor',
+                          hintText: '000.000.000-00',
+                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(
+                              color: Colors.black54), // Cor do texto do rótulo
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors
+                                    .deepOrange), // Defina a cor desejada aqui
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(
+                                    0xFFb85b20)), // Cor das bordas quando não está em foco
+                          ),
+                        ),
+                        validator: (value) {
+                          if (_isAdopted &&
+                              (value!.isEmpty || value!.length < 11)) {
+                            return 'Informe um CPF válido';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 60.0),
                     ],
                   ),
                 ),
@@ -492,24 +577,32 @@ class _AdoptionFormState extends State<AdoptionForm> {
                       return IconButton(
                         onPressed: () async {
                           final picker = ImagePicker();
-                          final pickedFile = await picker.getImage(source: ImageSource.gallery);
+                          final pickedFile = await picker.getImage(
+                              source: ImageSource.gallery);
                           if (pickedFile != null) {
                             File image = File(pickedFile.path);
                             try {
-                              String imageName = DateTime.now().millisecondsSinceEpoch.toString();
-                              firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref().child('images').child('$imageName.jpg');
-                              
+                              String imageName = DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString();
+                              firebase_storage.Reference ref = firebase_storage
+                                  .FirebaseStorage.instance
+                                  .ref()
+                                  .child('images')
+                                  .child('$imageName.jpg');
+
                               // Mostrar indicador de carregamento enquanto a imagem está sendo enviada
                               showDialog(
                                 context: context,
-                                barrierDismissible: false, // Impede que o usuário feche o diálogo
+                                barrierDismissible:
+                                    false, // Impede que o usuário feche o diálogo
                                 builder: (BuildContext context) {
                                   return Center(
                                     child: CircularProgressIndicator(),
                                   );
                                 },
                               );
-                              
+
                               await ref.putFile(image);
                               String imageUrl = await ref.getDownloadURL();
                               setState(() {
@@ -534,11 +627,13 @@ class _AdoptionFormState extends State<AdoptionForm> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Text("Remover Imagem"),
-                                content: Text("Tem certeza que deseja remover esta imagem?"),
+                                content: Text(
+                                    "Tem certeza que deseja remover esta imagem?"),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context).pop(); // Fechar a caixa de diálogo
+                                      Navigator.of(context)
+                                          .pop(); // Fechar a caixa de diálogo
                                     },
                                     child: Text("Cancelar"),
                                   ),
@@ -546,17 +641,22 @@ class _AdoptionFormState extends State<AdoptionForm> {
                                     onPressed: () async {
                                       // Remover a imagem do Firebase Storage
                                       try {
-                                        await firebase_storage.FirebaseStorage.instance.refFromURL(_imageUrls[index]).delete();
+                                        await firebase_storage
+                                            .FirebaseStorage.instance
+                                            .refFromURL(_imageUrls[index])
+                                            .delete();
                                       } catch (error) {
-                                        print('Erro ao remover imagem do Firebase Storage: $error');
+                                        print(
+                                            'Erro ao remover imagem do Firebase Storage: $error');
                                       }
-                                      
+
                                       // Remover a imagem da lista
                                       setState(() {
                                         _imageUrls.removeAt(index);
                                       });
-                                      
-                                      Navigator.of(context).pop(); // Fechar a caixa de diálogo
+
+                                      Navigator.of(context)
+                                          .pop(); // Fechar a caixa de diálogo
                                     },
                                     child: Text("Remover"),
                                   ),
@@ -573,68 +673,79 @@ class _AdoptionFormState extends State<AdoptionForm> {
                     }
                   },
                 ),
-                const SizedBox(height: 20.0),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          try {
-                            Adoptions adoption = Adoptions(
-                                animalType: _selectedAnimalType ?? "",
-                                size: _selectedAnimalSize ?? "",
-                                behavior: _selectedBehavior,
-                                description: _descriptionController.text,
-                                name: _nameController.text,
-                                sex: _selectedAnimalSex ?? "",
-                                age: _ageController.text,
-                                vaccinesAndMedicines:
-                                    _vaccinesAndMedicinesController.text,
-                                diseases: _diseasesController.text,
-                                weight: _weightController.text,
-                                familyInfo: _familyInfoController.text,
-                                adopted: _isAdopted,
-                                images: _imageUrls,
-                                userId: _userBd?.id ?? "");
-                            
-                            if (firebaseId == null) {
-                              await FirebaseFirestore.instance
-                                  .collection('adoptions')
-                                  .add(adoption.toJson());
-                            } else {
-                              await FirebaseFirestore.instance
-                                  .collection('adoptions')
-                                  .doc(firebaseId)
-                                  .update(adoption.toJson());
-                            }
-                            resetVariables();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Registro salvo com sucesso!'),
-                              ),
-                            );
-                            Navigator.pop(context);
-                          } catch (e) {
-                            print('Erro ao enviar os dados: $e');
-                          }
-                        }
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Color(0xFFb85b20)),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      child: Text('Salvar'),
-                    ),
-                  ],
-                ),
+                const SizedBox(height: 100.0),
               ],
             ),
           ),
         ),
       ),
       bottomNavigationBar: BottomNavigation(),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.4,
+            child: FloatingActionButton(
+              heroTag: "approveButton",
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  try {
+                    Adoptions adoption = Adoptions(
+                        animalType: _selectedAnimalType ?? "",
+                        size: _selectedAnimalSize ?? "",
+                        behavior: _selectedBehavior,
+                        description: _descriptionController.text,
+                        name: _nameController.text,
+                        sex: _selectedAnimalSex ?? "",
+                        age: _ageController.text,
+                        vaccinesAndMedicines:
+                            _vaccinesAndMedicinesController.text,
+                        diseases: _diseasesController.text,
+                        weight: _weightController.text,
+                        familyInfo: _familyInfoController.text,
+                        adopted: _isAdopted,
+                        adopterName: _adopterNameController.text,
+                        adopterCpf: _adopterCpfController.text,
+                        images: _imageUrls,
+                        userId: _userBd?.id ?? "");
+
+                    if (firebaseId == null) {
+                      await FirebaseFirestore.instance
+                          .collection('adoptions')
+                          .add(adoption.toJson());
+                    } else {
+                      await FirebaseFirestore.instance
+                          .collection('adoptions')
+                          .doc(firebaseId)
+                          .update(adoption.toJson());
+                    }
+                    resetVariables();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Registro salvo com sucesso!'),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  } catch (e) {
+                    print('Erro ao enviar os dados: $e');
+                  }
+                }
+              },
+              backgroundColor: Color(0xFFb85b20),
+              foregroundColor: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add),
+                  SizedBox(height: 4),
+                  Text('Salvar'), // Adicionando o texto "Aprovar"
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

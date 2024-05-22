@@ -15,6 +15,8 @@ class Adoptions {
   final String? weight;
   final String? familyInfo;
   final bool? adopted;
+  final String? adopterName;
+  final String? adopterCpf;
   final List<dynamic>? images;
   final String userId;
 
@@ -31,6 +33,8 @@ class Adoptions {
     this.weight,
     this.familyInfo,
     this.adopted,
+    this.adopterName,
+    this.adopterCpf,
     this.images,
     required this.userId,
   });
@@ -50,6 +54,8 @@ class Adoptions {
       weight: data['weight'] ?? '',
       familyInfo: data['familyInfo'] ?? '',
       adopted: data['adopted'] ?? '',
+      adopterName: data['adopterName'] ?? '',
+      adopterCpf: data['adopterCpf'] ?? '',
       images: data['images'] ?? '',
       userId: data['userId'] ?? '',
     );
@@ -69,6 +75,8 @@ class Adoptions {
       'weight': weight,
       'familyInfo': familyInfo,
       'adopted': adopted,
+      'adopterName': adopterName,
+      'adopterCpf': adopterCpf,
       'images': images,
       'userId': userId
     };
@@ -93,6 +101,6 @@ class Adoptions {
   }
 
   String getAnimalAdoptionMessage() {
-    return "Olá, Gostaria de adotar o cachorro $name Estou pronto para recebê-lo em um lar cheio de amor e cuidado. Por favor, me informe os próximos passos para a adoção. Obrigado(a).";
+    return "Olá, Gostaria de adotar o cachorro $name. Estou pronto para recebê-lo em um lar cheio de amor e cuidado. Por favor, me informe os próximos passos para a adoção. Obrigado(a).";
   }
 }
