@@ -1,5 +1,7 @@
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:meu_novo_aumigo/services/auth_service.dart';
 import 'package:meu_novo_aumigo/view/adoption/adoption_page.dart';
 import 'package:meu_novo_aumigo/view/global/bottom_navigation.dart';
 import 'package:meu_novo_aumigo/view/global/sidebar.dart';
@@ -8,12 +10,16 @@ import 'package:meu_novo_aumigo/view/global/topbar.dart';
 class AdoptionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var _auth = context.read<AuthService>();
+    var _userBD = _auth.userBD;
+
     return Scaffold(
       appBar: TopBar(),
       drawer: Sidebar(),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('adoptions')
+            .where('userId', isEqualTo: _userBD?.id)
             .orderBy('adopted')
             .orderBy('name')
             .snapshots(),
