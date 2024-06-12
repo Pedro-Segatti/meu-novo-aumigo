@@ -44,20 +44,30 @@ class AdoptionList extends StatelessWidget {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          SizedBox(height: 16),
-          FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AdoptionForm(
-                    adoption: null,
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.4,
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AdoptionForm(
+                      adoption: null,
+                    ),
                   ),
-                ),
-              );
-            },
-            icon: Icon(Icons.add),
-            label: Text("Adicionar"),
+                );
+              },
+              backgroundColor: Color(0xFFb85b20),
+              foregroundColor: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add),
+                  SizedBox(height: 4),
+                  Text('Adicionar'),
+                ],
+              ),
+            ),
           ),
         ],
       ),
